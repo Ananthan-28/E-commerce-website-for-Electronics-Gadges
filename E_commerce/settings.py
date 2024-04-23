@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'E_commerce.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': '**************',
+        'ENGINE': '***********',
         'NAME': 'project_techbuy',
         'USER':'root',
         'PASSWORD':'',
