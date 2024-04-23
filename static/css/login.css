@@ -1,0 +1,30 @@
+
+a {
+    text-decoration: none;
+}
+.login-page {
+    width: 100%;
+    height: 100vh;
+    display: inline-block;
+    display: flex;
+    align-items: center;
+    padding-top: 20px
+     
+   
+}
+.form-right i {
+    font-size: 100px;
+}
+.logo{
+    margin: 60px;
+    padding-left: 40px;
+    min-width: 60vw;
+    padding-left: 50px;
+    align-items: center;
+    right:0%;
+    left:3%;
+}
+.link{
+    text-align: center;
+    padding-top: 40px;
+}

@@ -1,0 +1,161 @@
+/* div{
+  border:1px solid black;
+} */
+.ps-6 {
+  padding-left: 3.6rem;
+}
+.fontrobo{
+  font-family: Roboto;
+  font-weight: 400;
+}
+body {
+  margin: 0;
+  background-color:#ffffff;
+  padding-bottom: 0;
+}
+.store-locator,.track-orders,.my-acc{
+  cursor: pointer;
+}
+.logo{
+  width:650px;
+  height:105px;
+}
+.content-size{
+  font-size: 1.25rem;
+}
+.title-top{
+  background-color: #f6ebdc;
+}
+.title-section{
+  background-color: #FF9800;
+}
+.search-box{
+  display: flex;
+  position: relative;
+  width:700px;
+  height:50px;
+  border-radius: 30px;
+  align-items: center;
+}
+.search-bar{
+  width:100%;
+  height:50px;
+  border:0;
+  border-radius: 22px;
+  padding-left: 5%;
+  font-family: Arial;
+  font-size:18px;
+}
+.lens{
+  position: absolute;
+  width:75px;
+  height:50px;
+  border:0;
+  color:#F95712 ;
+  background-color: #ffff;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius:25px ;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 21px;
+  transition: 0.15s;
+  right:32.47%;
+}
+.lens:hover{
+  background-color:#2a2a2424 ;
+}
+.search-icon{
+  font-size: 1.3rem;
+}
+.hf-contents{
+  font-size: 1.3rem;
+}
+.hf{
+  height:75px;
+  background-color:  #F95712;
+}
+.hf-1{
+  margin-right: 15%;
+}
+.g-cursor{
+  cursor:pointer;
+}
+/* .pc,.laptop,.audio,.tv{
+  width:65%;
+  height:105px;
+  margin-left:18%;
+  margin-bottom: 5px;
+}
+.mobile{
+  width:80%;
+  height:105px;
+  margin-left:13%;
+  margin-bottom: 0px;
+}
+#categories{
+  margin-bottom: 0;
+} */
+.sidebar {
+  border: 3px dashed #000;
+  border-left: none;
+  margin-bottom:20px;
+  margin-top:15px;
+  background-color: #ffffff;
+}
+
+.sidebar .nav-link {
+    color: #000;
+}
+  
+.sidebar .nav-link:hover {
+  color: #ffffff;
+  background-color: #89898b;
+}
+.sidebar .nav-link .bi:hover {
+  color: #ffffff;
+}
+.add-address{
+  background-color: #FF9800;
+  color: black;
+  border-radius: 3px;
+  width:110%;
+  cursor: pointer;
+}
+.add-address:hover{
+  background-color: white;
+  color: #da8301;
+  border-color: #FF9800;
+}
+.footor {
+  background-color: #232F3E;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+}
+.footor a {
+  color: white;
+}
+.footor-logo {
+  margin-top: 20px;
+}
+.footer-img{
+  width:15%;
+  height:65px;
+}
+.profile-div{
+      height:35px !important;
+      width:35px !important;
+      border-radius: 50% !important;
+      overflow: hidden !important;
+
+}
+.username {
+  flex: 1;
+  max-width: 80px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.profile-pic{
+  object-fit: cover;
+  width:100%;
+  height:100%;
+}

@@ -1,0 +1,780 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+      xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/add_listing.css' %}">
+  <title>Add Listing</title>
+  
+</head>
+<body>
+  <section id="header">
+    <div class="container-fluid header-div">
+      <div class="row">
+        <div class="col-2">
+          <img class="img-fluid p-0 m-0 logo" src="{% static  'images/logo/logo.png' %}">
+        </div>
+        <div class="col-2 d-flex align-items-center justify-content-center">
+          <a href="{% url 'seller_home' %}" class="text-decoration-none"><span class="fw-light fs-4 text-dark roboto-font">Home</span></a>
+        </div>
+        <div class="col-1 d-flex align-items-center justify-content-end">
+          <div class="d-flex">
+            <span class="fw-light roboto-font fs-5">Listings</span>
+            <div class="dropdown pt-1">
+              <button class="btn dropdown-toggle gmail-addition" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false"></button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+                <li><a class="dropdown-item" href="{% url 'my_listing' %}" type="button">My Listing</a></li>
+                <li><a class="dropdown-item" href="{% url 'add_listing' %}" type="button">Add Listing</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-3 d-flex align-items-center justify-content-start">
+          <div class="d-flex">
+            <span class="fw-light roboto-font fs-5">Order Details</span>
+            <div class="dropdown pt-1">
+              <button class="btn dropdown-toggle gmail-addition" type="button" id="dropdownMenu3" data-bs-toggle="dropdown" aria-expanded="false"></button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenu3">
+                <li><a class="dropdown-item" type="button">Active Orders</a></li>
+                <li><a class="dropdown-item" type="button">Returns</a></li>
+                <li><a class="dropdown-item" type="button">Cancellation</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="ms-5">
+            <a class="text-decoration-none" href="{% url 'add_discount' %}"><span class="fw-light text-dark roboto-font fs-5">Discounts</span></a>
+          </div>
+        </div>
+        <div class="col-4 d-flex align-items-center justify-content-end pe-4">
+          <div class="profile-icon d-flex align-items-center justify-content-center"><i class="bi bi-person-fill fs-3"></i>
+        </div>
+          <div>
+            <div>
+              <span class="fs-5">{{seller.seller_company_name}}</span>
+            </div>
+            <div class="d-flex align-items-center">
+              <span class="fw-lighter">{{seller.seller_email}}</span>
+              <div class="dropdown">
+                <button class="btn dropdown-toggle gmail-addition" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                  <li><a class="dropdown-item" href="{% url 'seller_details' %}" type="button">Account Details</a></li>
+                  <li><a class="dropdown-item" href="{% url 'seller_logout' %}" type="button">Logout</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>  
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="m-3 mb-4">
+    <h2 class="fw-light">Add Listing</h2>
+  </div>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-2 bg-white sidebar">
+        <ul class="nav flex-column">
+          <li class="nav-item pb-1 mb-2 mt-2 selected" id="smartphone">  <a class="nav-link active" href="#"><i class="bi bi-phone"></i><span class="d-none d-sm-inline-block ms-1">Smartphone</span></a>
+          </li>
+          <li class="nav-item pb-2" id="computer">
+            <a class="nav-link text-decoration-none" href="#"><i class="bi bi-pc-display"></i><span class="d-none d-sm-inline-block ms-1">Computer</span></a>
+          </li>
+          <li class="nav-item pb-2" id="laptop">
+            <a class="nav-link text-decoration-none" href="#"><i class="bi bi-laptop"></i><span class="d-none d-sm-inline-block ms-1">Laptop</span></a>
+          </li>
+          <li class="nav-item pb-2" id="television">
+            <a class="nav-link text-decoration-none" href="#"><i class="bi bi-tv"></i><span class="d-none d-sm-inline-block ms-1">Television</span></a>
+          </li>
+          <li class="nav-item pb-2" id="audio">
+            <a class="nav-link text-decoration-none" href="#"><i class="bi bi-speaker"></i><span class="d-none d-sm-inline-block ms-1">Audio</span></a>
+          </li>
+        </ul>
+        
+      </div>
+      <div class="col-10">
+        
+        <div id="content-container">
+
+          <div id="computer">
+            <div class="col-12">
+            
+              <div>
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="font-roboto mb-4">Product Details: Computer</h4>
+
+                    <div class="d-flex">
+                      <div class="input-group me-3 flex-grow-1">
+                      <form method="POST" class="d-flex" enctype="multipart/form-data">
+                        {% csrf_token %}
+                          <label class="input-group-text">Product Name</label>
+                          <input type="text" name="pc_name" class="form-control" placeholder="Enter the name of the product" style="width:450px;" required>
+                        </div>
+                        <div class="input-group">
+                          <label class="input-group-text">Brand</label>
+                          <input type="text" name="pc_brand" class="form-control" placeholder="Enter the brand Name" required>
+                        </div>
+                      </div>
+                      <div class="input-group mt-3 input-group-lg">
+                        <span class="input-group-text">Enter Product Decription</span>
+                        <textarea class="form-control" name="pc_description" placeholder="Enter the Product Description here" required maxlength="255"></textarea>
+                      </div>
+                      <div class="d-flex mt-3">
+                        <div class="input-group me-3">
+                          <label class="input-group-text">Price</label>
+                          <input type="number" name="pc_price" class="form-control" placeholder="Enter Price" min="1" required>
+                        </div>
+                        <div class="input-group me-3">
+                          <label class="input-group-text">Stock</label>
+                          <input type="number" name="pc_stock" class="form-control" placeholder="Enter the Quantity" min="5" required>
+                        </div>
+                        <select class="form-select" name="pc_status" required>
+                          <option selected disabled>Select Status</option>>
+                          <option value="active">Active</option>
+                          <option value="active">Inactive</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card mt-3">
+                    <div class="card-body">
+                      <h4 class="font-roboto mb-4">Enter Product Specifications</h4>
+                      <div class="d-flex">
+                        <div class="input-group me-3">
+                          <input type="number" name="pc_ram" class="form-control" placeholder="Enter RAM storage in GB" maxlength="2" required >
+                          <label class="input-group-text">GB</label>
+                        </div>
+                        <div class="input-group me-3">
+                          <input type="number" name="pc_storage" class="form-control storageSize"  placeholder="Enter Storage Size" maxlength="3" minlength="3" required >
+                          <select class="form-select unitSelect" name="pc_storage_unit" required>
+                            <option selected disabled>Select unit</option>>
+                            <option value="GB">GB</option>
+                            <option value="TB">TB</option>
+                          </select>
+                        </div>
+                        <div class="input-group me-3">
+                          <input type="number" step="0.1" name="pc_screen" class="form-control" placeholder="Enter the Screen Size " maxlength="4" required >
+                          <label class="input-group-text">inches</label>
+                        </div>
+                      </div>
+                      <h5 class="font-roboto mt-3 mb-2">Select the Processor</h5>
+                      <div class="d-flex">
+                        <div class="input-group me-3">
+                          <select class="form-select" name="pc_processor" id="brandSelect" required>
+                            <option value="" selected disabled>Select Brand</option>
+                            <option value="Intel">Intel</option>
+                            <option value="AMD">AMD</option>
+                          </select>
+                        </div>
+                        <div class="input-group me-3">
+                          <select class="form-select" name="pc_pro_gen" id="generationSelect" required>
+                            <option value="" selected disabled>Select Generation</option>
+                          </select>
+                        </div>
+                        <div class="input-group me-3">
+                          <input type="text" name="pc_pro_model" class="form-control" placeholder="Enter Model Number" pattern="\d{5}[a-zA-Z]" maxlength="6" required >
+                        </div>
+                      </div>
+                      <h5 class="font-roboto mt-3 mb-2">Other Details</h5>
+                      <select class="form-select mb-3" name="pc_graphics" >
+                        <option selected disabled value="">Graphics Card</option>>
+                        <option value="NVIDIA GeForce RTX 4050 Ti 6GB">NVIDIA GeForce RTX 4050 Ti 6GB</option>
+                        <option value="NVIDIA GeForce RTX 4050 Ti 4GB">NVIDIA GeForce RTX 4050 Ti  4GB</option>
+                        <option value="NVIDIA GeForce RTX 3050 Ti 6GB">NVIDIA GeForce RTX 3050 Ti 6GB</option>
+                        <option value="NVIDIA GeForce RTX 3050 Ti 4GB">NVIDIA GeForce RTX 3050 Ti 4GB</option>
+                        <option value="NVIDIA GeForce GTX 1650 Ti 6GB">NVIDIA GeForce GTX 1650 Ti 6GB</option>
+                        <option value="NVIDIA GeForce GTX 1650 Ti 4GB">NVIDIA GeForce GTX 1650 Ti 4GB</option>
+                        <option value="NVIDIA GeForce RTX 4050 6GB">NVIDIA GeForce RTX 4050 6GB</option>
+                        <option value="NVIDIA GeForce RTX 4050 4GB">NVIDIA GeForce RTX 4050 4GB</option>
+                        <option value="NVIDIA GeForce RTX 3050 6GB">NVIDIA GeForce RTX 3050 6GB</option>
+                        <option value="NVIDIA GeForce RTX 3050 4GB">NVIDIA GeForce RTX 3050 4GB</option>
+                        <option value="Intel Graphics 6GB">Intel Graphics 6GB</option>
+                        <option value="Intel Graphics 4GB">Intel Graphics 4GB</option>
+                      </select>
+                      <div class="d-flex  ">
+                        <div class="input-group me-3">
+                          <label class="input-group-text">Resolution</label>
+                          <input type="number" name="pc_resolution_x" placeholder="1366" class="form-control" required><label class="input-group-text">x</label><input type="number" name="pc_resolution_y" placeholder="768" class="form-control" required>
+                        </div>
+                        <div class="input-group me-3">
+                          <input type="number" name="pc_refresh" class="form-control" placeholder="Enter Refresh Rate" required>
+                          <label class="input-group-text">Hz</label>
+                        </div>
+                        <div class="input-group me-3">
+                          <label class="input-group-text">OS</label>
+                          <input type="text" name="pc_os" class="form-control" placeholder="Windows 11" required>
+                        </div>
+                        <select class="form-select" name="pc_warranty" required>
+                          <option selected disabled>Warranty Period</option>>
+                          <option value=1>1 Year</option>
+                          <option value=2>2 Year</option>
+                          <option value=3>3 Year</option>
+                        </select>
+                      </div>
+                      <h5 class="font-roboto mt-3 mb-2">Upload Images </h5>
+
+                      <div class="image-upload-container">
+                        <div class="d-flex">
+                          <div class="input-group">
+                            <label class="uploadlabel me-2" for="uploadbtn">
+                              <div class="image-upload d-flex align-items-center justify-content-center">
+                                <i class="bi bi-plus fs-4"></i>
+                              </div>
+                            </label>
+
+                            <input type="file" class="uploadFile" name="pc_images" id="uploadbtn" multiple="multiple" accept="image/jpeg, image/png, image/jpg" required>
+                          </div>
+                        </div>
+
+                      </div>
+
+                      <div class="photoList mt-2 mb-2" id="fileList">
+
+                      </div>
+
+                        <div class="d-flex align-items-end justify-content-end">
+                          <input type="submit" name="pc_submit" class="btn btn-primary me-3" value="Submit">
+                      </form>
+                      </div>
+                      
+                    
+                  </div>
+                </div>
+                
+
+              </div>
+            </div>
+
+          </div>
+          <div id="smartphone">
+            <div class="col-12">
+            
+              <div>
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="font-roboto mb-4">Product Details: Smartphone</h4>
+                    <form method="POST" enctype="multipart/form-data">
+                      {% csrf_token %}
+                        <div class="d-flex">
+                          <div class="input-group me-3">
+                            <label class="input-group-text">Product Name</label>
+                            <input type="text" name="phn_name" class="form-control" placeholder="Enter the name of the product" required>
+                          </div>
+                          <div class="input-group">
+                            <label class="input-group-text">Brand</label>
+                            <input type="text" name="phn_brand" class="form-control" placeholder="Enter the brand Name" required>
+                          </div>
+                        </div>
+                        <div class="input-group mt-3 input-group-lg">
+                          <span class="input-group-text">Enter Product Decription</span>
+                          <textarea class="form-control" name="phn_description" placeholder="Enter the Product Description here" required maxlength="255"></textarea>
+                        </div>
+                        <div class="d-flex mt-3">
+                          <div class="input-group me-3">
+                            <label class="input-group-text">Price</label>
+                            <input type="number" name="phn_price" class="form-control" placeholder="Enter Price" min="1" required>
+                          </div>
+                          <div class="input-group me-3">
+                            <label class="input-group-text">Stock</label>
+                            <input type="number" name="phn_stock" class="form-control" placeholder="Enter the Quantity" min="5" required>
+                          </div>
+
+                          <select class="form-select" name="phn_status" required>
+                            <option selected disabled>Select Status</option>>
+                            <option value="active">Active</option>
+                            <option value="active">Inactive</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card mt-3">
+                      <div class="card-body">
+                        <h4 class="font-roboto mb-4">Enter Product Specifications</h4>
+                        <div class="d-flex">
+                          <div class="input-group me-3">
+                            <input type="number" name="phn_ram" class="form-control" placeholder="Enter RAM storage in GB" maxlength="2" required >
+                            <label class="input-group-text">GB</label>
+                          </div>
+                          <div class="input-group me-3">
+                            <input type="number" name="phn_storage" class="form-control storageSize"  placeholder="Enter Storage" maxlength="3" minlength="3" required >
+                            <label class="input-group-text">GB</label>
+                          </div>
+                          <div class="input-group me-3">
+                            <label class="input-group-text">Color</label>
+                            <input type="Text" name="phn_color" class="form-control" placeholder="Eg: Blue" required>
+                          </div>
+
+                        </div>
+                        <h5 class="font-roboto mt-3 mb-2">Select the Processor</h5>
+                        <div class="d-flex">
+                          <div class="input-group me-3">
+                            <select class="form-select" name="pro_brand" id="brandSelect2" required>
+                              <option selected disabled>Select Brand</option>
+                              <option value="Snapdragon">Snapdragon</option>
+                              <option value="Google Tensor">Google Tensor</option>
+                              <option value="Apple A">Apple</option>
+                            </select>
+                          </div>
+                          <div class="input-group me-3">
+                            <select class="form-select" name="pro-gen" id="generationSelect2" required>
+                              <option value="" selected disabled>Select Generation</option>
+                            </select>
+                          </div>
+                        </div>
+                        <h5 class="font-roboto mt-3 mb-2">Other Details</h5>
+
+                        <div class="d-flex  ">
+                          <div class="input-group me-3">
+                            <label class="input-group-text">Resolution</label>
+                            <input type="number" name="phn-resx" placeholder="1366" class="form-control" required><label class="input-group-text">x</label><input type="number" name="phn-resy" placeholder="768" class="form-control" required>
+                          </div>
+                          <div class="input-group me-3">
+                            <input type="number" name="phn-battery" class="form-control" placeholder="Enter Battery Storage" required>
+                            <label class="input-group-text">mAh</label>
+                          </div>
+                          <div class="input-group me-3">
+                            <label class="input-group-text">OS</label>
+                            <input type="text" name="phn-os" class="form-control" placeholder="Android 13" required>
+                          </div>
+
+                        </div>
+                        <div class="d-flex mt-4">
+                          <div class="input-group me-3">
+                            <input type="number" step="0.01" name="phn-screen" class="form-control" placeholder="Enter the Screen Size " maxlength="4" required >
+                            <label class="input-group-text">inches</label>
+                          </div>
+                          <div class="input-group me-3">
+                            <input type="number" name="phn-cam" class="form-control" placeholder="Camera Specification " maxlength="3" required >
+                            <label class="input-group-text">MP</label>
+                          </div>
+                          <select class="form-select me-3" name="phn-warranty" required>
+                            <option selected disabled>Warranty Period</option>>
+                            <option value=1>1 Year</option>
+                            <option value=2>2 Year</option>
+                            <option value=3>3 Year</option>
+                          </select>
+
+                        </div>
+
+                        <h5 class="font-roboto mt-3 mb-2">Upload Images</h5>
+
+                        <div class="image-upload-container">
+                          <div class="d-flex">
+                            <div class="input-group">
+                              <label class="uploadlabel me-2" for="uploadbtn1">
+                                <div class="image-upload d-flex align-items-center justify-content-center">
+                                  <i class="bi bi-plus fs-4"></i>
+                                </div>
+                              </label>
+
+                              <input type="file" class="uploadFile" name="phn-images" id="uploadbtn1" multiple="multiple" accept="image/jpeg, image/png, image/jpg" required>
+                            </div>
+                          </div>
+                          </div>
+
+                          <div class="photoList mt-2 mb-2" id="fileList1">
+
+                          </div>
+
+                          <div class="d-flex align-items-end justify-content-end">
+                            <input type="submit" name="phn-submit" class="btn btn-primary me-3" value="Submit">
+                    </form>
+                      </div>
+
+                  </div>
+                </div>
+                
+
+              </div>
+            </div>
+            
+          </div>
+          <div id="laptop">
+            <div class="col-12">
+            
+              <div>
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="font-roboto mb-4">Product Details: Laptop</h4>
+                    <form method="POST" enctype="multipart/form-data">
+                      {% csrf_token %}
+
+
+                        <div class="d-flex">
+                          <div class="input-group me-3">
+                            <label class="input-group-text">Product Name</label>
+                            <input type="text" name="lap_name" class="form-control" placeholder="Enter the name of the product" required>
+                          </div>
+                          <div class="input-group">
+                            <label class="input-group-text">Brand</label>
+                            <input type="text" name="lap_brand" class="form-control" placeholder="Enter the brand Name" required>
+                          </div>
+                        </div>
+                        <div class="input-group mt-3 input-group-lg">
+                          <span class="input-group-text">Enter Product Decription</span>
+                          <textarea class="form-control" name="lap_description" placeholder="Enter the Product Description here" required maxlength="255"></textarea>
+                        </div>
+                        <div class="d-flex mt-3">
+                          <div class="input-group me-3">
+                            <label class="input-group-text">Price</label>
+                            <input type="number" name="lap_price" class="form-control" placeholder="Enter Price" min="1" required>
+                          </div>
+                          <div class="input-group me-3">
+                            <label class="input-group-text">Stock</label>
+                            <input type="number" name="lap_stock" class="form-control" placeholder="Enter the Quantity" min="5" required>
+                          </div>
+                          <select class="form-select" name="lap_status" required>
+                            <option selected disabled>Select Status</option>>
+                            <option value="active">Active</option>
+                            <option value="active">Inactive</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card mt-3">
+                      <div class="card-body">
+                        <h4 class="font-roboto mb-4">Enter Product Specifications</h4>
+                        <div class="d-flex">
+                          <div class="input-group me-3">
+                            <input type="number" name="lap_ram" class="form-control" placeholder="Enter RAM storage in GB" maxlength="2" required >
+                            <label class="input-group-text">GB</label>
+                          </div>
+                          <div class="input-group me-3">
+                            <input type="number" name="lap_storage"class="form-control storageSize"  placeholder="Enter Storage Size" maxlength="3" minlength="3" required >
+                            <select class="form-select" name="lap_storage_unit" required>
+                              <option selected disabled>Select unit</option>>
+                              <option value="GB">GB</option>
+                              <option value="TB">TB</option>
+                            </select>
+                          </div>
+                          <div class="input-group me-3">
+                            <input type="number" step="0.1" name="lap_screen" class="form-control" placeholder="Enter the Screen Size " maxlength="4" required >
+                            <label class="input-group-text">inches</label>
+                          </div>
+                        </div>
+                        <h5 class="font-roboto mt-3 mb-2">Select the Processor</h5>
+                        <div class="d-flex">
+                          <div class="input-group me-3">
+                            <select class="form-select" name="lap_processor" id="brandSelect1" required>
+                              <option selected disabled>Select Brand</option>
+                              <option value="Intel">Intel</option>
+                              <option value="AMD">AMD</option>
+                            </select>
+                          </div>
+                          <div class="input-group me-3">
+                            <select class="form-select" name="lap_pro_gen" id="generationSelect1" required>
+                              <option selected disabled>Select Generation</option>
+                            </select>
+                          </div>
+                          <div class="input-group me-3">
+                            <input type="text" name="lap_pro_model" class="form-control" placeholder="Enter Model Number" pattern="\d{5}[a-zA-Z]" maxlength="6" required >
+                          </div>
+                        </div>
+                        <h5 class="font-roboto mt-3 mb-2">Other Details</h5>
+                        <select class="form-select mb-3 me-3" name="lap_graphics">
+                          <option selected disabled>Graphics Card</option>>
+                          <option value="NVIDIA GeForce RTX 4050 Ti 6GB">NVIDIA GeForce RTX 4050 Ti 6GB</option>
+                          <option value="NVIDIA GeForce RTX 4050 Ti 4GB">NVIDIA GeForce RTX 4050 Ti  4GB</option>
+                          <option value="NVIDIA GeForce RTX 3050 Ti 6GB">NVIDIA GeForce RTX 3050 Ti 6GB</option>
+                          <option value="NVIDIA GeForce RTX 3050 Ti 4GB">NVIDIA GeForce RTX 3050 Ti 4GB</option>
+                          <option value="NVIDIA GeForce GTX 1650 Ti 6GB">NVIDIA GeForce GTX 1650 Ti 6GB</option>
+                          <option value="NVIDIA GeForce GTX 1650 Ti 4GB">NVIDIA GeForce GTX 1650 Ti 4GB</option>
+                          <option value="NVIDIA GeForce RTX 4050 6GB">NVIDIA GeForce RTX 4050 6GB</option>
+                          <option value="NVIDIA GeForce RTX 4050 4GB">NVIDIA GeForce RTX 4050 4GB</option>
+                          <option value="NVIDIA GeForce RTX 3050 6GB">NVIDIA GeForce RTX 3050 6GB</option>
+                          <option value="NVIDIA GeForce RTX 3050 4GB">NVIDIA GeForce RTX 3050 4GB</option>
+                          <option value="Intel Graphics 6GB">Intel Graphics 6GB</option>
+                          <option value="Intel Graphics 4GB">Intel Graphics 4GB</option>
+                        </select>
+                        <div class="d-flex">
+                          <div class="input-group me-3">
+                            <label class="input-group-text">Resolution</label>
+                            <input type="number" name="lap_resolution_x" placeholder="1366" class="form-control" required><label class="input-group-text">x</label><input type="number" name="lap_resolution_x" placeholder="768" class="form-control" required>
+                          </div>
+                          <div class="input-group me-3">
+                            <input type="number" name="lap_refresh" class="form-control" placeholder="Enter Refresh Rate" required>
+                            <label class="input-group-text">Hz</label>
+                          </div>
+                          <div class="input-group me-3">
+                            <label class="input-group-text">OS</label>
+                            <input type="text" name="lap_os" class="form-control" placeholder="Windows 11" required>
+                          </div>
+                          <select class="form-select" name="lap_warranty" required>
+                            <option selected disabled>Warranty Period</option>>
+                            <option value=1>1 Year</option>
+                            <option value=2>2 Year</option>
+                            <option value=3>3 Year</option>
+                          </select>
+                        </div>
+                        <h5 class="font-roboto mt-3 mb-2">Upload Images</h5>
+
+                        <div class="image-upload-container">
+                          <div class="d-flex">
+                            <div class="input-group">
+                              <label class="uploadlabel me-2" for="uploadbtn2">
+                                <div class="image-upload d-flex align-items-center justify-content-center">
+                                  <i class="bi bi-plus fs-4"></i>
+                                </div>
+                              </label>
+
+                              <input type="file" class="uploadFile" name="lap_images" id="uploadbtn2" multiple="multiple" accept="image/jpeg, image/png, image/jpg" required>
+                            </div>
+                          </div>
+
+                        </div>
+                        <div class="photoList mt-2 mb-2" id="fileList2">
+
+                        </div>
+                          <div class="d-flex align-items-end justify-content-end">
+                            <input type="submit" name="lap_submit" class="btn btn-primary me-3" value="Submit">
+                          </div>
+
+                      </div>
+                    </form>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          
+
+          <div id="television">
+            <div class="col-12">
+            
+              <div>
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="font-roboto mb-4">Product Details: Television</h4>
+                    <form method="POST" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <div class="d-flex">
+                        <div class="input-group me-3">
+                          <label class="input-group-text">Product Name</label>
+                          <input type="text" name="tv-name" class="form-control" placeholder="Enter the name of the product" required>
+                        </div>
+                        <div class="input-group">
+                          <label class="input-group-text">Brand</label>
+                          <input type="text" name="tv-brand" class="form-control" placeholder="Enter the brand Name" required>
+                        </div>
+                      </div>
+                      <div class="input-group mt-3 input-group-lg">
+                        <span class="input-group-text">Enter Product Decription</span>
+                        <textarea class="form-control" name="tv-description" placeholder="Enter the Product Description here" required maxlength="255"></textarea>
+                      </div>
+                      <div class="d-flex mt-3">
+                        <div class="input-group me-3">
+                          <label class="input-group-text">Price</label>
+                          <input type="number" name="tv-price" class="form-control" placeholder="Enter Price" min="1" required>
+                        </div>
+                        <div class="input-group me-3">
+                          <label class="input-group-text">Stock</label>
+                          <input type="number" name="tv-stock" class="form-control" placeholder="Enter the Quantity" min="5" required>
+                        </div>
+                        <select class="form-select" name="tv-status" required>
+                          <option selected disabled>Select Status</option>>
+                          <option value="active">Active</option>
+                          <option value="active">Inactive</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card mt-3">
+                    <div class="card-body">
+                      <h4 class="font-roboto mb-4">Enter Product Specifications</h4>
+                      <div class="d-flex">
+                        <div class="input-group me-3">
+                          <input type="number" step="0.1" name="tv-screen" class="form-control" placeholder="Enter the Screen Size " maxlength="4" required >
+                          <label class="input-group-text">inches</label>
+                        </div>
+                        <div class="input-group me-3">
+                          <label class="input-group-text">Resolution</label>
+                          <input type="number" name="tv-res-x" placeholder="1366" class="form-control" required><label class="input-group-text">x</label><input type="number" name="tv-res-y" placeholder="768" class="form-control" required>
+                        </div>
+                      </div>
+
+                      <h5 class="font-roboto mt-3 mb-2">Other Details</h5>
+
+                      <div class="d-flex">
+
+                        <select class="form-select me-3" name="tv-os" >
+                          <option selected disabled>OS (if applicable)</option>>
+                          <option value='Android'>Android</option>
+                          <option value='FireTv OS'>FireTv OS</option>
+                          <option value='Web OS'>Web OS</option>
+                        </select>
+
+
+                        <select class="form-select me-3" name="tv-warranty" required>
+                          <option selected>Warranty Period</option>>
+                          <option value=1>1 Year</option>
+                          <option value=2>2 Year</option>
+                          <option value=3>3 Year</option>
+                        </select>
+                      </div>
+                      <h5 class="font-roboto mt-3 mb-2">Upload Images</h5>
+
+                      <div class="image-upload-container">
+                        <div class="d-flex">
+                          <div class="input-group">
+                            <label class="uploadlabel me-2" for="uploadbtn3">
+                              <div class="image-upload d-flex align-items-center justify-content-center">
+                                <i class="bi bi-plus fs-4"></i>
+                              </div>
+                            </label>
+
+                            <input type="file" class="uploadFile" name="tv-images" id="uploadbtn3" multiple="multiple" accept="image/jpeg, image/png, image/jpg" required>
+                          </div>
+                        </div>
+                      </div>
+                        <div class="photoList mt-2 mb-2" id="fileList3">
+
+                        </div>
+
+                        <div class="d-flex align-items-end justify-content-end">
+                          <input type="submit" name="tv-submit" class="btn btn-primary me-3" value="Submit">
+                    </form>
+                      </div>
+                    
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+            
+          <div id="audio">
+            <div class="col-12">
+            
+              <div>
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="font-roboto mb-4">Product Details: Audio</h4>
+                    <form method="POST" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <div class="d-flex">
+                        <div class="input-group me-3">
+                          <label class="input-group-text">Product Name</label>
+                          <input type="text" name="a-name" class="form-control" placeholder="Enter the name of the product" required>
+                        </div>
+                        <div class="input-group">
+                          <label class="input-group-text">Brand</label>
+                          <input type="text" name="a-brand" class="form-control" placeholder="Enter the brand Name" required>
+                        </div>
+                      </div>
+                      <div class="input-group mt-3 input-group-lg">
+                        <span class="input-group-text">Enter Product Decription</span>
+                        <textarea class="form-control" name="a-description" placeholder="Enter the Product Description here" required maxlength="255"></textarea>
+                      </div>
+                      <div class="d-flex mt-3">
+                        <div class="input-group me-3">
+                          <label class="input-group-text">Price</label>
+                          <input type="number" name="a-price" class="form-control" placeholder="Enter Price" min="1" required>
+                        </div>
+                        <div class="input-group me-3">
+                          <label class="input-group-text">Stock</label>
+                          <input type="number" name="a-stock" class="form-control" placeholder="Enter the Quantity" min="5" required>
+                        </div>
+                        <select class="form-select" name="a-status" required>
+                          <option selected disabled>Select Status</option>>
+                          <option value="active">Active</option>
+                          <option value="active">Inactive</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card mt-3">
+                    <div class="card-body">
+                      <h4 class="font-roboto mb-4">Enter Product Specifications</h4>
+                      <div class="d-flex">
+                        <select class="form-select me-3" name="a-type" required>
+                          <option selected disabled>Product Type</option>>
+                          <option value='TWS'>TWS</option>
+                          <option value='Headphone'>Headphone</option>
+                          <option value='Neckband'>Neckband</option>
+                          <option value='Wireless Speaker'>Wireless Speaker</option>
+                          <option value='Speaker'>Speaker</option>
+                          <option value='Gaming Headphone'>Gaming Headphone</option>
+                        </select>
+                        <div class="input-group me-3">
+                          <label class="input-group-text">Bluetooth Version</label>
+                          <input type="number" step="0.1" name="a-bluetooth" class="form-control" placeholder="Eg: 5.1" required>
+                        </div>
+                        <select class="form-select" name="a-mic" required>
+                          <option selected disabled>-- Mic (Please Select) --</option>>
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </select>
+                      </div>
+
+                      <div class="d-flex mt-3 mb-2">
+                        <div class="input-group me-3">
+                          <label class="input-group-text">Playback</label>
+                          <input type="number" step="0.1" name="a-playback" class="form-control" placeholder="eg: 0.5" required>
+                          <label class="input-group-text">H</label>
+                        </div>
+                        <div class="input-group me-3">
+                          <label class="input-group-text">Latency</label>
+                          <input type="number" name="a-latency" class="form-control" placeholder="eg: 100" required>
+                          <label class="input-group-text">ms</label>
+                        </div>
+                        <select class="form-select" name="a-warranty" required>
+                          <option selected disabled>Warranty Period</option>>
+                          <option value=1>1 Year</option>
+                          <option value=2>2 Year</option>
+                          <option value=3>3 Year</option>
+                        </select>
+                      </div>
+                      <h5 class="font-roboto mt-3 mb-2">Upload Images</h5>
+
+                      <div class="image-upload-container">
+                        <div class="d-flex">
+                          <div class="input-group">
+                            <label class="uploadlabel me-2" for="uploadbtn4">
+                              <div class="image-upload d-flex align-items-center justify-content-center">
+                                <i class="bi bi-plus fs-4"></i>
+                              </div>
+                            </label>
+
+                            <input type="file" class="uploadFile" name="a-images" id="uploadbtn4" multiple="multiple" accept="image/jpeg, image/png, image/jpg" required>
+                          </div>
+                        </div>
+                      </div>
+                        <div class="photoList mt-2 mb-2" id="fileList4">
+
+                        </div>
+                        <div class="d-flex align-items-end justify-content-end">
+                          <input type="submit" name="audio-submit" class="btn btn-primary me-3" value="Submit">
+                    </form>
+                      </div>
+                    
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+  
+  
+
+</body>
+<script src="{% static 'script/add_listing.js' %}"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</html>

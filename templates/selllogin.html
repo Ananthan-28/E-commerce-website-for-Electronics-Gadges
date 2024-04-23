@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seller Login</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{% static 'css/sellerlogin.css' %}">
+</head>
+<body>
+    <section id="header">
+        <div class="container-fluid header-div">
+          <div class="row">
+            <div class="col-3">
+              <img class="img-fluid p-0 m-0 logo" src="{% static 'images/logo/logo.png' %}">
+            </div>
+            <div class="col-3 d-flex align-items-center justify-content-center">
+              <span class="fw-light fs-4 text-dark welcome-font">Seller Portal</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="form-container">
+        <h2 class="text-center mb-4">Seller Login</h2>
+        <form method="POST">
+          {% csrf_token %}
+          <div class="input-group mb-1">
+            <label for="inputEmail" class="input-group-text">
+              <i class="bi bi-envelope-at-fill"></i>
+            </label>
+            <input type="email" name="seller-email" class="form-control" id="inputEmail" placeholder="Enter your email" value="{{email_data}}">
+          </div>
+          {% if verified %} <span class="text-small text-success"> An OTP has been send to this Email</span>{% endif %}
+          <div class="d-flex justify-content-end align-items-center mb-1">
+            <input type="submit" name="verify-email" value="Verify" class="btn btn-primary" {% if verified %} disabled {% endif %}>
+          </div>
+          {% if email_error %}
+            <span class="text-small text-danger">{{email_error}}</span>
+          {% endif %}
+          {% if show_content %}
+            <div class="form-group">
+              <div class="input-group">
+                <input type="text" class="form-control" id="inputOTP" name="otp-input" placeholder="Enter OTP" required>
+              </div>
+            </div>
+            {% if otp_error %}
+              <span class="text-small text-danger">{{otp_error}}</span>
+            {% endif %}
+            <button type="submit" name="submit-otp" class="btn btn-primary btn-block btn-login">Login</button>
+          {% endif %}
+        </form>
+        <div class="mt-4 d-flex flex-column justify-contents-center align-items-center">
+          <span>Don’t have an account?</span>
+          <a href="{% url 'seller_registration' %}"><button class="btn btn-outline-primary mt-2">Register for new account</button></a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+

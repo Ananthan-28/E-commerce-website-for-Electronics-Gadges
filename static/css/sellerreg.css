@@ -1,0 +1,73 @@
+body {
+  background-color: #f8f9fa;
+}
+.registration-form {
+    border: 2px solid gray;
+    border-radius: 20px;
+    padding: 20px;
+
+}
+.form-container {
+  margin-top: 50px;
+
+}
+.logo{
+  width:650px;
+  height:105px;
+}
+.header-div{
+  background-color: #39f2ff;
+}
+.profile-icon{
+  height:50%;
+  width: 5%;
+}
+.dropdown{
+  height: 25px;
+}
+.gmail-addition{
+  padding: 0px 5px 5px;
+}
+.card-heading{
+  color: #18A3AC;
+}
+.card,.card-contents{
+  background-color: #F1F1F1;
+}
+.form-container {
+  margin-top: 50px;
+}
+.form-group {
+  margin-bottom: 20px; /* Margin between form groups */
+}
+
+.form-control {
+  border-color:gray;
+}
+
+.btn-primary {
+  background-color:orange;
+  border-color:orange;
+}
+
+.btn-primary:hover {
+  background-color:tomato;
+  border-color:tomato;
+}
+
+.btn-primary:focus {
+  box-shadow: none;
+}
+
+.btn-block {
+  width: 100%;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

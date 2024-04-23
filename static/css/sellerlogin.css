@@ -1,0 +1,51 @@
+body {
+      background-color: #f8f9fa;
+    }
+    .logo{
+      width:650px;
+      height:105px;
+    }
+    .header-div{
+      background-color: #39f2ff;
+    }
+    .profile-icon{
+      height:50%;
+      width: 5%;
+    }
+    .dropdown{
+      height: 25px;
+    }
+    .gmail-addition{
+      padding: 0px 5px 5px;
+    }
+    .card-heading{
+      color: #18A3AC;
+    }
+    .card,.card-contents{
+      background-color: #F1F1F1;
+    }
+    .form-container {
+      max-width: 400px;
+      margin: 50px auto;
+      padding: 30px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .input-group-append .btn-primary{
+      background-color: orange;
+      border-color:orange;
+      border-radius: 5px
+    }
+    .btn-login {
+      background-color: #007bff;
+      border-color: #007bff;
+      border-radius: 5px;
+    }
+    .btn-login:hover {
+      background-color: #0056b3;
+      border-color: #0056b3;
+    }

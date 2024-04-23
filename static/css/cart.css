@@ -1,0 +1,143 @@
+.ps-6 {
+  padding-left: 3.6rem;
+  }
+  .fontrobo{
+  font-family: Roboto;
+  font-weight: 400;
+  }
+  body {
+    margin: 0;
+    background-color: azure;
+  }
+  .store-locator,.track-orders,.my-acc{
+    cursor: pointer;
+  }
+  .logo{
+    width:650px;
+    height:105px;
+  }
+  .content-size{
+    font-size: 1.25rem;
+  }
+  .title-top{
+    background-color: #f6ebdc;
+  }
+  .title-section{
+    background-color: #FF9800;
+  }
+  .search-box{
+    display: flex;
+    position: relative;
+    width:700px;
+    height:50px;
+    border-radius: 30px;
+    align-items: center;
+  }
+  .search-bar{
+    width:100%;
+    height:50px;
+    border:0;
+    border-radius: 22px;
+    padding-left: 5%;
+    font-family: Arial;
+    font-size:18px;
+  }
+  .lens{
+    position: absolute;
+    width:75px;
+    height:50px;
+    border:0;
+    color:#F95712 ;
+    background-color: #ffff;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius:25px ;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 21px;
+    transition: 0.15s;
+    right:32.47%;
+  }
+  .lens:hover{
+    background-color:#2a2a2424 ;
+  }
+  .search-icon{
+    font-size: 1.3rem;
+  }
+  .hf-contents{
+    font-size: 1.3rem;
+  }
+  .hf{
+    height:75px;
+    background-color:  #F95712;
+  }
+  .hf-1{
+    margin-right: 15%;
+  }
+  .g-cursor{
+    cursor:pointer;
+  }
+  .address-button{
+    color:#f57e34;
+    border:none;
+    border: 1px solid #f57e34;
+    border-width: 2px;
+  }
+  .address-button:hover{
+    color: white;
+    background-color: #f57e34;
+  }
+  .price-title{
+    font-family: Roboto;
+    font-weight: 500;
+    font-size: 19px;
+  }
+  .price-body{
+    font-family: Roboto;
+    font-weight: 400;
+  }
+  .price-decoration{
+    border:1px dashed rgb(180, 175, 175);
+    border-left: none;
+    border-right: none;
+  }
+  .brand-name{
+    font-size: 19px;
+  }
+  .seller-name{
+    font-size: 14px;
+  }
+  .choices{
+    font-family: Roboto;
+    font-weight: 500;
+    font-size: 17px;
+  }
+  .delivery-details{
+    font-size: 15px;
+  }
+  .place-order-button{
+    background-color: #F95712;
+    color:black;
+    font-size: 18px;
+    border-radius: 4px;
+    border:0;
+    width:180px;
+    height: 40px;
+  }
+  .profile-div{
+      height:35px !important;
+      width:35px !important;
+      border-radius: 50% !important;
+      overflow: hidden !important;
+
+
+  }
+  .username {
+  flex: 1;
+  max-width: 80px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  }
+  .profile-pic{
+    object-fit: cover;
+    width:100%;
+    height:100%;
+  }

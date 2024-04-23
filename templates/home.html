@@ -1,0 +1,373 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <title>Home</title>
+  <link rel="stylesheet" href="{% static '/css/home.css' %}">
+</head>
+<body>
+
+  <section id="header-top">
+    <div class="container-fluid title-top">
+      <div class="row">
+        <div class="col-lg-3 col-md-4 col-5 text-center pt-3">
+          <p class="lead">Welcome to Techbuy</p>
+        </div>
+        <div class="col-6 d-flex flex-md-row flex-column justify-content-center align-items-md-center align-items-sm-start">
+          <div class="store-locator me-4">
+            <i class="bi bi-geo-alt content-size"></i>
+            <a href="#" class="d-inline text-decoration-none text-dark pe-1 ">Store Locations</a>
+          </div>
+          <div class="track-orders me-4">
+            <i class="bi bi-truck content-size"></i>
+            <a href="#" class="d-inline text-decoration-none text-dark pe-1">Track your order</a>
+          </div>
+          <div class="my-acc me-5">
+            <i class="bi bi-person content-size"></i>
+            <a href="{% url 'my_account' %}" class="d-inline text-decoration-none text-dark pe-1">My Account</a>
+          </div>  
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="header">
+    <div class="container-fluid title-section">
+      <div class="row">
+        <div class="col-lg-3 col-md-4 col-5">
+          <a href="{% url 'home' %}"><img class="img-fluid pe-0 mb-0 logo" src="{% static '/images/logo/logo.png' %}"></a>
+        </div>
+        <div class="col-6 d-flex flex-md-row flex-column justify-content-center align-items-md-center">
+          <div class="home-title me-5">
+            <a href="{% url 'home' %}" class="text-dark"><i class="bi bi-house-door-fill content-size "></i></a>
+            <a href="{% url 'home' %}" class="d-inline text-decoration-none text-dark content-size">HOME</a>
+          </div>
+          <div class="about-us-title me-5">
+            <a href="{% url 'about_us' %}" class="text-dark"><i class="bi bi-person-square content-size"></i></a>
+            <a href="{% url 'about_us' %}" class="d-inline text-decoration-none text-dark content-size">ABOUT US</a>
+          </div>
+          <div class="contact-us me-5">
+            <a href="{% url 'contact' %} " class="text-dark"><i class="bi bi-linkedin content-size"></i></a>
+            <a href="{% url 'contact' %}" class="d-inline text-decoration-none text-dark content-size">CONTACT US</a>
+          </div>  
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="header-bottom">
+    <div class="container-fluid hf mb-3">
+      <div class="row justify-content-md-end">
+        <div class="col-8 col-md-4 col-lg-5 pt-2 hf-1 mt-1">
+          <div>
+             <form id="searchForm" method="POST" action="{% url 'search_results' %}">
+                {% csrf_token %}
+                <input type="text" class="search-bar form-field" id="searchData" name="search-data" placeholder="Search your products" oninput="checkInput()">
+                <button class="lens" type="submit" id="submitButton" disabled><i class="bi bi-search search-icon"></i></button>
+            </form>
+          </div>
+        </div>
+        <div class="col-1 pt-3 col-md-1 d-flex align-content-center justify-content-center hf-contents mt-1">
+            {% if user %}
+              <a href="{% url 'dashboard' %}" class="d-none d-md-inline-block text-decoration-none text-dark username">{{ user.user_name }}</p></a>
+              <div class="profile-div ms-2">
+                {% if user.user_profile_img %}
+                    <a href="{% url 'dashboard' %}"><img class="profile-pic" src="{{user.user_profile_img.url}}"></a>
+                {% endif %}
+              </div>
+            {% else %}
+              <a href="{% url 'login' %}" class="d-none d-md-inline-block text-decoration-none text-dark">LOGIN</p></a>
+              <i class="bi bi-person-circle ps-1 g-cursor"></i>
+            {% endif %}
+        </div>
+        <div class="col-1 col-md-1 pt-3 d-flex align-content-center justify-content-center hf-contents mt-1">
+          {% if user %}
+              <a href="{% url 'cart' %}" class="d-none d-md-inline-block text-decoration-none text-dark">CART</a>
+              <i class="bi bi-cart4 ps-1 g-cursor"></i>
+          {% else %}
+              <a href="{% url 'login' %}" class="d-none d-md-inline-block text-decoration-none text-dark">CART</a>
+              <i class="bi bi-cart4 ps-1 g-cursor"></i>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="categories">
+    <div class="container-fluid mb-5">
+      <div class="row justify-content-evenly">
+        {% for i in category_data %}
+            <div class="col-2 d-block ">
+              <a href="{% url 'category' i.category_id %}"><img class="img-fluid audio g-cursor" src="{{i.category_image.url}}"></a>
+               <div class="col-md-2 d-none d-md-inline">
+                <a href="{% url 'category' i.category_id %}" class="text-decoration-none text-dark fs-4 d-flex align-items-center justify-content-center">{{i.category_name}}</a>
+               </div>
+            </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section id="ads-posters">
+      <div class="container-fluid mb-2">
+        <div class="row position-relative">
+            <div class="col ps-4 pe-4 d-none d-lg-flex">
+              <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    {% for i in event_data %}
+                      <button type="button" data-bs-target="#carouselExampleControls" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %} aria-label="Slide {{ forloop.counter }}">
+                      </button>
+                    {% endfor %}
+                </div>
+            <div class="carousel-inner">
+              {% for i in event_data %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                  <img src="{{ i.event_img.url }}" class="d-block w-100 c-pointer" alt="lap_banner1">
+                </div>
+              {% endfor %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+        </div>
+      </div>
+  </section>
+
+
+  <section id="best-tvs">
+    <div class="contaier-fluid mt-3 mb-3 ps-6">
+      <div class="row">
+        <div class="col ps-6 ">
+          <p class="fs-2"> Best selling smart TVs...</p>
+        </div>
+      </div>
+      <div class="row sm-ps-1 md-ps-6 d-flex align-items-center justify-content-md-around">
+       {% for i in tv_data %}
+            <div class="col-sm-5 col-md-2 d-flex align-items-center justify-content-center">
+                <div class="card">
+                    <a href="{% url 'product_details' i.product_id %}">
+                        <img src="{{i.images.first.product_image.url}}" class="card-img-top img-fluid d-block c-pointer" alt="..." style="object-fit:fill;">
+                    <div class="card-body">
+                        <p class="card-text figCStyle">{{ i.product_name }}</p></a>
+                        <div>
+                            {% if i.has_discount %}
+                                <p class="card-text Lead fw-bold fs-5 mb-0">₹{{ i.discount_price|intcomma }}.00</p>
+                                <p class="card-text mb-0 deal-details">M.R.P: <span class="text-decoration-line-through">₹{{ i.product_price|intcomma }}.00</span></p>
+                                <p class="card-text deal-details">You Save: {{ i.discount_percentage }}% (₹{{ i.latest_discount.discount_amount|intcomma }})</p>
+                            {% else %}
+                                <p class="card-text Lead fw-bold fs-5 mb-0">₹{{ i.product_price|intcomma }}.00</p>
+                            {% endif %}
+                        </div>
+                        <div class="mt-2 mb-2">
+                            <div class="mb-1">
+                                {% for star_index in star_range %}
+                                    {% if star_index < i.user_rating %}
+                                        <i class="bi bi-star-fill"></i>
+                                    {% elif i.user_rating_half and star_index == i.user_rating %}
+                                        <i class="bi bi-star-half"></i>
+                                    {% else %}
+                                        <i class="bi bi-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="text-primary `fst-normal"></span>
+                            </div>
+                        </div>
+                        {% if i.has_discount %}
+                            <button class="btn btn-outline-success rounded-pill fw-bold highlight">OFFERS AVAILABLE</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+       {% endfor %}
+      </div>  
+    </div>    
+  </section>
+
+  <section id="best-sphones">
+    <div class="contaier-fluid mt-3 mb-3">
+      <div class="row">
+        <div class="col ps-6">
+          <p class="fs-2"> Best selling Smartphones...</p>
+        </div>
+      </div>
+      <div class="row ps-6 d-flex align-items-center justify-content-md-around">
+        {% for i in phone_data %}
+            <div class="col-sm-5 col-md-2 pb-1 d-flex align-items-center justify-content-center">
+              <div class="card">
+                  <div style="height:300px; width:225px;">
+                      <a href="{% url 'product_details' i.product_id %}">
+                        <img src="{{i.images.first.product_image.url}}" class="card-img-top img-fluid d-block c-pointer" alt="..." style="width:100%; height:95%; object-fit:contain;">
+                  </div>
+                <div class="card-body">
+                    <p class="card-text figCStyle">{{ i.product_name }}<br>
+                    {% for spec in i.phone.all %}
+                        ({{ spec.color }},{% widthratio spec.spec_ram 1000 1 %}GB, {% widthratio spec.spec_storage 1000 1 %}GB) </p>
+                    {% endfor %}
+                    </a>
+                    <div>
+                        {% if i.has_discount %}
+                            <p class="card-text Lead fw-bold fs-5 mb-0">₹{{ i.discount_price|intcomma }}.00</p>
+                            <p class="card-text mb-0 deal-details">M.R.P: <span class="text-decoration-line-through">₹{{ i.product_price|intcomma }}.00</span></p>
+                            <p class="card-text deal-details">You Save: {{ i.discount_percentage }}% (₹{{ i.latest_discount.discount_amount|intcomma }})</p>
+                        {% else %}
+                            <p class="card-text Lead fw-bold fs-5 mb-0">₹{{ i.product_price|intcomma }}.00</p>
+                        {% endif %}
+                    </div>
+                    <div class="mt-2 mb-2">
+                        {% for star_index in star_range %}
+                            {% if star_index < i.user_rating %}
+                                <i class="bi bi-star-fill"></i>
+                            {% elif i.user_rating_half and star_index == i.user_rating %}
+                                <i class="bi bi-star-half"></i>
+                            {% else %}
+                                <i class="bi bi-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                        <span class="text-primary fst-normal"></span>
+                    </div>
+                    {% if i.has_discount %}
+                        <button class="btn btn-outline-success rounded-pill fw-bold highlight">OFFERS AVAILABLE</button>
+                    {% endif %}
+                </div>
+              </div>
+            </div>
+        {% endfor %}
+
+
+      </div>
+    </div>        
+  </section>
+
+  <section id="best-laps">
+    <div class="contaier-fluid mt-3 mb-3">
+      <div class="row">
+        <div class="col ps-6">
+          <p class="fs-2"> Best selling Laptops...</p>
+        </div>
+      </div>
+      <div class="row ps-6 d-flex align-items-center justify-content-md-around">
+        {% for i in laptop_data %}
+            <div class="col-sm-5 col-md-2 d-flex align-items-center justify-content-center">
+              <div class="card mb-3">
+                <div style="width:225px; height:165px; object-fit:fill;" class="mb-1">
+                    <a href="{% url 'product_details' i.product_id %}">
+                    <img src="{{i.images.first.product_image.url}}" class="card-img-top img-fluid tv_1 d-block c-pointer" alt="..." style="max-width: 100%; height: 100%;">
+                </div>
+                <div class="card-body">
+                    {% for spec in i.computer.all %}
+                        <p class="card-text figCStyle">{{ i.product_name }}, {{ spec.spec_processor }}, {% widthratio spec.spec_storage 1000 1|floatformat:0 as storage %} {% if storage == 1000 %} 1TB {% else %} {{ storage }}GB {% endif %}, {% if spec.spec_gpu is not None %}{{spec.spec_gpu}}{% endif %} </p>
+                    {% endfor %}
+                    </a>
+                    <div >
+                        {% if i.has_discount %}
+                            <p class="card-text Lead fw-bold fs-5 mb-0">₹{{ i.discount_price|intcomma }}.00</p>
+                            <p class="card-text mb-0 deal-details">M.R.P: <span class="text-decoration-line-through">₹{{ i.product_price|intcomma }}.00</span></p>
+                            <p class="card-text deal-details">You Save: {{ i.discount_percentage }}% (₹{{ i.latest_discount.discount_amount|intcomma }})</p>
+                        {% else %}
+                            <p class="card-text Lead fw-bold fs-5 mb-0">₹{{ i.product_price|intcomma }}.00</p>
+                        {% endif %}
+                    </div>
+                    <div class="mt-2 mb-2">
+                        {% for star_index in star_range %}
+                            {% if star_index < i.user_rating %}
+                                <i class="bi bi-star-fill"></i>
+                            {% elif i.user_rating_half and star_index == i.user_rating %}
+                                <i class="bi bi-star-half"></i>
+                            {% else %}
+                                <i class="bi bi-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                        <span class="text-primary fst-normal"></span>
+                    </div>
+                    {% if i.has_discount %}
+                        <button class="btn btn-outline-success rounded-pill fw-bold highlight">OFFERS AVAILABLE</button>
+                    {% endif %}
+                </div>
+              </div>
+            </div>
+        {% endfor %}
+
+      </div> 
+    </div>    
+  </section>
+
+  <section class="footor">
+    <div class="container-fluid">
+    
+      <div class="row">
+        <div class="col-md-3">
+          <h5>Get to Know Us</h5>
+          <ul class="list-unstyled">
+            <li><a class="text-decoration-none" href="#">About Us</a></li>
+            <li><a class="text-decoration-none" href="#">Careers</a></li>
+            <li><a class="text-decoration-none" href="#">Press Releases</a></li>
+            <li><a class="text-decoration-none" href="#">Techbuy Science</a></li>
+          </ul>
+        </div>
+
+        <div class="col-md-3">
+          <h5>Connect with Us</h5>
+          <ul class="list-unstyled">
+            <li><a class="text-decoration-none" href="#">Facebook</a></li>
+            <li><a class="text-decoration-none" href="#">Twitter</a></li>
+            <li><a class="text-decoration-none" href="#">Instagram</a></li>
+          </ul>
+        </div>
+
+        <div class="col-md-3">
+          <h5>International Sites</h5>
+          <ul class="list-unstyled">
+            <li><a class="text-decoration-none" href="#">India</a></li>
+            <li><a class="text-decoration-none" href="#">China</a></li>
+            <li><a class="text-decoration-none" href="#">Sri Lanka</a></li>
+            <li><a class="text-decoration-none" href="#">France</a></li>
+            <li><a class="text-decoration-none" href="#">Dubai</a></li>
+          </ul>
+        </div>
+
+        <div class="col-md-3">
+          <h5>Legal Information</h5>
+          <ul class="list-unstyled">
+            <li><a  class="text-decoration-none" href="#">Conditions of Use & Sale</a></li>
+            <li><a class="text-decoration-none" href="#">Privacy Notice</a></li>
+            <li><a class="text-decoration-none" href="#">Interest-Based Ads</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="row footor-logo">
+        <div class="col d-flex justify-content-center align-items-center">
+          <img class="img-fluid footer-img" src="{% static '/images/logo/logo.png' %}">
+          <div class="text-white" fs-5>© 2023-2024, techbuy.com, Inc. or its affiliates</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script>
+    function checkInput() {
+        var searchData = document.getElementById('searchData').value;
+        if (searchData.trim() !== '') {
+            document.getElementById('submitButton').disabled = false;
+        } else {
+            document.getElementById('submitButton').disabled = true;
+        }
+    }
+  </script>
+</body>
+</html>

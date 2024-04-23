@@ -1,0 +1,79 @@
+    .logo{
+      width:650px;
+      height:105px;
+    }
+    .header-div{
+      background-color: #39f2ff;
+    }
+    .profile-icon{
+      height:50%;
+      width: 5%;
+    }
+    .dropdown{
+      height: 25px;
+    }
+    .gmail-addition{
+      padding: 0px 5px 5px;
+    }
+    .font-roboto{
+      font-family: Roboto,sans-serif;
+      font-weight: 300;
+    }
+    .nav-link{
+      border-radius: 10px;
+    }
+    .selected a.nav-link, .selected a.nav-link i{
+      background-color: #0d6efd;
+      color: #ffffff;
+    }
+    .sidebar .nav-link {
+      color: #000;
+    }
+    .sidebar .nav-link:hover {
+      color: #ffffff;
+      background-color: #0d6efd;
+    }
+    .nav-link:hover .bi {
+      color: #ffffff;
+    }
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+    
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    .image-upload{
+      border: 2px dashed #3c78d3;
+      cursor: pointer;
+      width: 75px;
+      height: 75px;
+    }
+    .bi-plus{
+      color:#3c78d3;
+    }
+    .uploadFile{
+      display: none;
+    }
+    .photoList{
+      border: 2px solid #3c78d3;
+      cursor: pointer;
+      width: 100%;
+      height: 125px;
+      display: flex;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      gap: 10px;
+      position: relative;
+      margin-right:10px ;
+    }
+    .photoList img {
+      object-fit: contain;
+      max-width: 100%;
+      max-height: 105px;
+      margin-top:5px;
+    }
+
+    

@@ -1,0 +1,314 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static  'css/seller_profile.css' %}">
+  <title>Seller Profile</title>
+  
+</head>
+
+<body>
+  <section id="header">
+    <div class="container-fluid header-div">
+      <div class="row">
+        <div class="col-2">
+          <img class="img-fluid p-0 m-0 logo" src="{% static 'images/logo/logo.png' %}">
+        </div>
+        <div class="col-2 d-flex align-items-center justify-content-center">
+          <a href="{% url 'seller_home' %}" class="text-decoration-none"><span class="fw-light fs-4 text-dark roboto-font">Home</span></a>
+        </div>
+        <div class="col-1 d-flex align-items-center justify-content-end">
+          <div class="d-flex">
+            <span class="fw-light roboto-font fs-5">Listings</span>
+            <div class="dropdown pt-1">
+              <button class="btn dropdown-toggle gmail-addition" type="button" id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false"></button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+                <li><a class="dropdown-item" href="{% url 'my_listing' %}" type="button">My Listing</a></li>
+                <li><a class="dropdown-item" href="{% url 'add_listing' %}" type="button">Add Listing</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-3 d-flex align-items-center justify-content-start">
+          <div class="d-flex">
+            <span class="fw-light roboto-font fs-5">Order Details</span>
+            <div class="dropdown pt-1">
+              <button class="btn dropdown-toggle gmail-addition" type="button" id="dropdownMenu3" data-bs-toggle="dropdown" aria-expanded="false"></button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenu3">
+                <li><a class="dropdown-item" type="button">Active Orders</a></li>
+                <li><a class="dropdown-item" type="button">Returns</a></li>
+                <li><a class="dropdown-item" type="button">Cancellation</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="ms-5">
+            <a class="text-decoration-none" href="{% url 'add_discount' %}"><span class="fw-light roboto-font text-dark fs-5">Discounts</span></a>
+          </div>
+        </div>
+        <div class="col-4 d-flex align-items-center justify-content-end pe-4">
+          <div class="profile-icon d-flex align-items-center justify-content-center"><i class="bi bi-person-fill fs-3"></i>
+        </div>
+          <div>
+            <div>
+              <span class="fs-5">{{seller.seller_company_name}}</span>
+            </div>
+            <div class="d-flex align-items-center">
+              <span class="fw-lighter">{{seller.seller_email}}</span>
+              <div class="dropdown">
+                <button class="btn dropdown-toggle gmail-addition" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                  <li><a class="dropdown-item" href="#" type="button">Account Details</a></li>
+                  <li><a class="dropdown-item" href="{% url 'seller_logout' %}" type="button">Logout</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>  
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="m-3 mb-4">
+    <h2 class="fw-light">Manage Profile</h2>
+  </div>
+
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <div class="d-flex col-12">
+                <div class="col-4">
+                  <h4 class="fw-light card-heading">User Details</h4>
+                </div>
+                <div class="col-8 d-flex justify-content-end">
+                  <a href="#"><button class="btn btn-outline-success edit-btn" data-bs-toggle="modal" data-bs-target="#EditData">Edit</button></a>
+                </div>  
+              </div>  
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-6 d-flex">
+                  <div class="col-4">
+                    <p class="fw-bold fs-6 card-captions">Seller ID:</p>
+                  </div>
+                  <div class="col-8">
+                    <p class="fs-5">{{seller.seller_id}}</p>
+                  </div>
+                </div>
+                <div class="col-6 d-flex">
+                  <div class="col-4">
+                    <p class="fw-bold fs-6 card-captions">License No.:</p>
+                  </div>
+                  <div class="col-8">
+                    <p class="fs-5">{{seller.seller_licence}}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6 d-flex">
+                  <div class="col-4">
+                    <p class="fw-bold fs-6 card-captions">Company Name:</p>
+                  </div>
+                  <div class="col-8">
+                    <p class="fs-5">{{seller.seller_company_name}} </p>
+                  </div>
+                </div>
+                <div class="col-6 d-flex">
+                  <div class="col-4">
+                    <p class="fw-bold fs-6 card-captions">Address:</p>
+                  </div>
+                  <div class="col-8">
+                    <p class="fs-5">{{seller.seller_address}}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6 d-flex">
+                  <div class="col-4">
+                    <p class="fw-bold fs-6 card-captions">E-mail:</p>
+                  </div>
+                  <div class="col-8">
+                    <p class="fs-5">{{seller.seller_email}}</p>
+                  </div>
+                </div>
+                <div class="col-6 d-flex">
+                  <div class="col-4">
+                    <p class="fw-bold fs-6 card-captions">Phone No:</p>
+                  </div>
+                  <div class="col-8">
+                    <p class="fs-5">{{seller.seller_phone}}</p>
+                  </div>
+                </div>
+              </div>
+          </div>      
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="EditData" tabindex="-1" aria-labelledby="title-label0" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="title-label0">Edit Details</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form method="POST">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="user-name" class="col-form-label">Company Name:</label>
+                <input type="text" class="form-control" name="user_name" id="user-name" value="{{seller.seller_company_name}}">
+              </div>
+              <div class="mb-3">
+                <label for="user-address" class="col-form-label">Address:</label>
+                <input type="text" class="form-control" name="user_address" id="user-address" value="{{seller.seller_address}}">
+              </div>
+              <div class="mb-3">
+                <label for="user-email" class="col-form-label">Email:</label>
+                <input type="email" class="form-control" name="user_email" id="user-email" value="{{seller.seller_email}}">
+                {% if email_error %}
+                  <span class="small text-danger">{{email_error}}</span>
+                {% endif %}
+              </div>
+              <div class="mb-3">
+                <label for="user-phone" class="col-form-label">Phone No:</label>
+                <input type="tel" pattern="[0-9]{10}" class="form-control" id="user-phone" name="user_phone" value="{{seller.seller_phone}}" minlength="10" maxlength="10">
+                {% if phone_error %}
+                  <span class="small text-danger">{{phone_error}}</span>
+                {% endif %}
+              </div>
+
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" name="user_personal" class="btn btn-primary">Save</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container mt-3 mb-4">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <div class="d-flex col-12">
+                <div class="col-4">
+                  <h4 class="fw-light card-heading">Financial Details</h4>
+                </div>
+                <div class="col-8 d-flex justify-content-end">
+                  <a href="#"><button class="btn btn-outline-success edit-btn" data-bs-toggle="modal" data-bs-target="#EditBankData">Edit</button></a>
+                </div>  
+              </div>  
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-6 d-flex">
+
+                  <div class="col-4">
+                    <p class="fw-bold fs-6 card-captions">Account No:</p>
+                  </div>
+                  <div class="col-8">
+                    <p class="fs-5">{{seller.seller_bank_acc}}</p>
+                  </div>
+                </div>
+                <div class="col-6 d-flex">
+                  <div class="col-4">
+                    <p class="fw-bold fs-6 card-captions">IFSC Code:</p>
+                  </div>
+                  <div class="col-8">
+                    <p class="fs-5">{{seller.seller_IFSC}}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6 d-flex">
+                  <div class="col-4">
+                    <p class="fw-bold fs-6 card-captions">PAN:</p>
+                  </div>
+                  <div class="col-8">
+                    <p class="fs-5">{{seller.seller_pan}} </p>
+                  </div>
+                </div>
+                <div class="col-6 d-flex">
+                  <div class="col-4">
+                    <p class="fw-bold fs-6 card-captions">GSTN:</p>
+                  </div>
+                  <div class="col-8">
+                    <p class="fs-5">{{seller.seller_gst}}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6 d-flex">
+                  <div class="col-4">
+                    <p class="fw-bold fs-6 card-captions">Status:</p>
+                  </div>
+                  <div class="col-8">
+                    <p class="fs-5 text-success">{{seller.seller_status}}</p>
+                  </div>
+                </div>
+            </div>
+          </div>      
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="EditBankData" tabindex="-1" aria-labelledby="title-label" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="title-label">Edit Details</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form method="POST">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="user-account" class="col-form-label">Account No.:</label>
+                <input type="text" class="form-control" id="user-account" name="user_account" value="{{seller.seller_bank_acc}}">
+              </div>
+              <div class="mb-3">
+                <label for="user-ifsc" class="col-form-label">IFSC: </label>
+                <input type="text" class="form-control" id="user-ifsc" name="user_ifsc" value="{{seller.seller_IFSC}}">
+              </div>
+
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" name="user_bank" class="btn btn-primary">Save</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+
+</body>
+<script>
+  $(document).ready(function(){
+    $("form").on("submit", function(event){
+        {% if email_error is not None or phone_error is not None %}
+            $("#EditData").modal('show');
+        {% endif %}
+    });
+});
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</html>

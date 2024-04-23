@@ -1,0 +1,62 @@
+    .logo{
+      width:650px;
+      height:105px;
+    }
+    .header-div{
+      background-color: #39f2ff;
+    }
+    .profile-icon{
+      height:50%;
+      width: 5%;
+    }
+    .dropdown{
+      height: 25px;
+    }
+    .gmail-addition{
+      padding: 0px 5px 5px;
+    }
+    .card-heading{
+      font-family: Roboto,sans-serif;
+      color: #18A3AC;
+
+    }
+    .card,.card-contents{
+      background-color: #F1F1F1;
+    }
+    .card-body{
+      height: 150px;
+    }
+    .nav-bar-content,.welcome-font,.roboto-font{
+      font-family:Roboto,sans-serif;
+    }
+    /* .status-processing,.status-successful,.status-cancelled{
+      width:15px;
+      height:15px;
+      border:0;
+      border-radius: 50%;
+      margin-top:4px;
+      margin-right:2px;
+    }
+    .status-processing{
+      background-color:rgb(255, 200, 0);;
+    }
+    .status-successful{
+      background-color: green;
+    }
+    .status-cancelled{
+      background-color: red;
+    }
+    .btn-details{
+      border-radius: 3px;
+      width:125%;
+      height:80%;
+      background-color: #FB8D00;
+      color:white;
+    }
+    .btn-details:hover{
+      background-color: white;
+      color:#FB8D00;
+      border-color: #FB8D00;
+    }.bi-arrow-right-circle{
+      -webkit-text-stroke: 1px;
+    } */

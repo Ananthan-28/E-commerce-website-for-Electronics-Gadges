@@ -1,0 +1,36 @@
+a {
+    text-decoration: none;
+}
+.login-page {
+    width: 100%;
+    height: 100vh;
+    display: inline-block;
+    display: flex;
+    align-items: center;
+    padding-bottom: 0px;
+   
+}
+.form-right i {
+    font-size: 100px;
+}
+.logo{
+    margin: 60px;
+    padding-left: 40px;
+    max-width: 60vw;
+    padding-left: 50px;
+    padding-top: 80px;
+    right:0%;
+    left:3%;
+}
+.link{
+    text-align: center;
+}
+.img-fluid{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+.bi-eye-fill{
+    cursor: pointer;
+}

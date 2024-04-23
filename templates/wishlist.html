@@ -1,0 +1,238 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <title>Wishlist</title>
+  <link rel="stylesheet" href="{% static 'css/wishlist.css' %}">
+</head>
+<body>
+
+  <section id="header-top">
+    <div class="container-fluid title-top">
+      <div class="row">
+        <div class="col-lg-3 col-md-4 col-5 text-center pt-3">
+          <p class="lead ">Welcome to Techbuy</p>
+        </div>
+        <div class="col-6 d-flex flex-md-row flex-column justify-content-center align-items-md-center align-items-sm-start">
+          <div class="store-locator me-4">
+            <i class="bi bi-geo-alt content-size"></i>
+            <a href="#" class="d-inline text-decoration-none text-dark pe-1 ">Store Locations</a>
+          </div>
+          <div class="track-orders me-4">
+            <i class="bi bi-truck content-size"></i>
+            <a href="#" class="d-inline text-decoration-none text-dark pe-1">Track your order</a>
+          </div>
+          <div class="my-acc me-5">
+            <i class="bi bi-person content-size"></i>
+            <a href="{% url 'my_account' %}" class="d-inline text-decoration-none text-dark pe-1">My Account</a>
+          </div>  
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="header">
+    <div class="container-fluid title-section">
+      <div class="row">
+        <div class="col-lg-3 col-md-4 col-5">
+          <img class="img-fluid pe-0 mb-0 logo" src="{% static '/images/logo/logo.png' %}">
+        </div>
+        <div class="col-6 d-flex flex-md-row flex-column justify-content-center align-items-md-center ms-md-">
+          <div class="home-title me-5">
+            <a href="{% url 'home' %}" class="text-dark"><i class="bi bi-house-door-fill content-size "></i></a>
+            <a href="{% url 'home' %}" class="d-inline text-decoration-none text-dark content-size">HOME</a>
+          </div>
+          <div class="about-us-title me-5">
+            <a href="{% url 'about_us' %}" class="text-dark"><i class="bi bi-person-square content-size"></i></a>
+            <a href="{% url 'about_us' %}" class="d-inline text-decoration-none text-dark content-size">ABOUT US</a>
+          </div>
+          <div class="contact-us me-5">
+            <a href="{% url 'contact' %} " class="text-dark"><i class="bi bi-linkedin content-size"></i></a>
+            <a href="{% url 'contact' %}" class="d-inline text-decoration-none text-dark content-size">CONTACT US</a>
+          </div>  
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="header-bottom">
+    <div class="container-fluid hf mb-3">
+      <div class="row justify-content-md-end">
+        <div class="col-8 col-md-4 col-lg-5 pt-2 hf-1 mt-1">
+          <div>
+             <form id="searchForm" method="POST" action="{% url 'search_results' %}">
+                {% csrf_token %}
+                <input type="text" class="search-bar form-field" id="searchData" name="search-data" placeholder="Search your products" oninput="checkInput()">
+                <button class="lens" type="submit" id="submitButton" disabled><i class="bi bi-search search-icon"></i></button>
+            </form>
+          </div>
+        </div>
+        <div class="col-1 pt-3 col-md-1 d-flex align-content-center justify-content-center hf-contents mt-1">
+            {% if user %}
+              <a href="{% url 'dashboard' %}" class="d-none d-md-inline-block text-decoration-none text-dark username">{{ user.user_name }}</p></a>
+              <div class="profile-div ms-2">
+                {% if user.user_profile_img %}
+                    <a href="{% url 'dashboard' %}"><img class="profile-pic" src="{{user.user_profile_img.url}}"></a>
+                {% endif %}
+              </div>
+            {% else %}
+              <a href="{% url 'login' %}" class="d-none d-md-inline-block text-decoration-none text-dark">LOGIN</p></a>
+              <i class="bi bi-person-circle ps-1 g-cursor"></i>
+            {% endif %}
+        </div>
+        <div class="col-1 col-md-1 pt-3 d-flex align-content-center justify-content-center hf-contents mt-1">
+          {% if user %}
+              <a href="{% url 'cart' %}" class="d-none d-md-inline-block text-decoration-none text-dark">CART</a>
+              <i class="bi bi-cart4 ps-1 g-cursor"></i>
+          {% else %}
+              <a href="{% url 'login' %}" class="d-none d-md-inline-block text-decoration-none text-dark">CART</a>
+              <i class="bi bi-cart4 ps-1 g-cursor"></i>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="account-contents">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-3 col-md-3 bg-white sidebar">
+          <ul class="nav flex-column">
+            <li class="nav-item pb-2 mt-2">
+              <a class="nav-link" href="{% url 'dashboard' %}"><i class="bi bi-grid me-2 fs-5 text-dark"></i><span class="d-none d-sm-inline-block">Dashboard</span></a>
+            </li>
+            <li class="nav-item pb-2">
+              <a class="nav-link" href="{% url 'my_account' %}"><i class="bi bi-person-square me-2 fs-5 text-dark"></i><span class="d-none d-sm-inline-block">Account Details</span></a>
+            </li>
+            <li class="nav-item pb-2" >
+              <a class="nav-link" href="{% url 'my_orders' %}"><i class="bi bi-journals me-2 fs-5 text-dark"></i><span class="d-none d-sm-inline-block" >My Order</span></a>
+            </li>
+            <li class="nav-item pb-2">
+              <a class="nav-link" href="{% url 'my_address' %}"><i class="bi bi-person-lines-fill me-2 fs-5 text-dark"></i><span class="d-none d-sm-inline-block">My Address</span></a>
+            </li>
+            <li class="nav-item pb-1 mb-2" style="background-color: #89898b">
+              <a class="nav-link" href="{% url 'my_wishlist' %}"><i class="bi bi-heart-fill me-2 fs-5 text-dark"></i><span class="d-none d-sm-inline-block" style="color:white;">My Wishlist</span></a>
+            </li>
+            <li class="nav-item pb-2">
+              <a class="nav-link" href="{% url 'my_payments' %}"><i class="bi bi-credit-card-fill me-2 fs-5 text-dark"></i><span class="d-none d-sm-inline-block">Payment History</span></a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-9">
+
+          {% for item in wish_data %}
+            <div class="card mt-2">
+              <div class="card-title fw-bold ps-3 d-flex position-relative">
+                In Stock
+                <a href="{% url 'remove_wish' item.wishlist_id %}"><div class="position-absolute end-0"><i class="bi bi-trash g-cursor"></i></div></a>
+              </div>
+              <div class="card-body d-flex">
+                <div>
+                  <a href="{% url 'product_details' item.product.product_id %}" class="text-decoration-none"><img class="mx-auto p-image" src="{{ item.product.images.first.product_image.url }}"></a>
+                </div>
+                <div class="product-name ps-4">
+                  <a href="{% url 'product_details' item.product.product_id %}" class="text-decoration-none"><p class="fs-5 fw-bold">{{ item.product.product_name }}</p></a>
+                  <div class="d-flex rating-div">
+                    <div class="rating mt-1 d-flex"><span class="rating-contents"><i class="bi bi-star-fill"></i>{{item.product.user_rating}}</span></div><p class="fw-thin text-secondary ms-1">(216)</p>
+                  </div>
+                  <div class="d-flex mt-0 ">
+                    {% if item.product.has_discount %}
+                      <p class="fw-bold pt-1">₹{{ item.product.discount_price|intcomma }}</p>
+                      <p class="fw-light text-secondary text-decoration-line-through mt-1 ms-2">₹{{ item.product.product_price|intcomma }}</p>
+                    {% else %}
+                      <span class="fw-bold fs-5">₹{{ item.product.product_price|intcomma }}</span>
+                    {% endif %}
+                  </div>
+                </div>
+                <div class="p-order-details justify-content-center">
+                  <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="product_data" value="{{ item.product.product_id }}">
+                    <input type="hidden" name="wishlist_data" value="{{ item.wishlist_id }}">
+                    <button type="submit" name="add_cart" class="d-block btn-center-track mt-5">Add to cart</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="footor">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-3">
+          <h5>Get to Know Us</h5>
+          <ul class="list-unstyled">
+            <li><a class="text-decoration-none" href="#">About Us</a></li>
+            <li><a class="text-decoration-none" href="#">Careers</a></li>
+            <li><a class="text-decoration-none" href="#">Press Releases</a></li>
+            <li><a class="text-decoration-none" href="#">Techbuy Science</a></li>
+          </ul>
+        </div>
+
+        <div class="col-md-3">
+          <h5>Connect with Us</h5>
+          <ul class="list-unstyled">
+            <li><a class="text-decoration-none" href="#">Facebook</a></li>
+            <li><a class="text-decoration-none" href="#">Twitter</a></li>
+            <li><a class="text-decoration-none" href="#">Instagram</a></li>
+          </ul>
+        </div>
+
+        <div class="col-md-3">
+          <h5>International Sites</h5>
+          <ul class="list-unstyled">
+            <li><a class="text-decoration-none" href="#">India</a></li>
+            <li><a class="text-decoration-none" href="#">China</a></li>
+            <li><a class="text-decoration-none" href="#">Sri Lanka</a></li>
+            <li><a class="text-decoration-none" href="#">France</a></li>
+            <li><a class="text-decoration-none" href="#">Dubai</a></li>
+          </ul>
+        </div>
+
+        <div class="col-md-3">
+          <h5>Legal Information</h5>
+          <ul class="list-unstyled">
+            <li><a  class="text-decoration-none" href="#">Conditions of Use & Sale</a></li>
+            <li><a class="text-decoration-none" href="#">Privacy Notice</a></li>
+            <li><a class="text-decoration-none" href="#">Interest-Based Ads</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="row footor-logo">
+        <div class="col d-flex justify-content-center align-items-center">
+          <img class="img-fluid footer-img" src="{% static 'images/logo/logo.png' %}">
+          <div class="text-white" fs-5>© 2023-2024, techbuy.com, Inc. or its affiliates</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script>
+    function checkInput() {
+        var searchData = document.getElementById('searchData').value;
+        if (searchData.trim() !== '') {
+            document.getElementById('submitButton').disabled = false;
+        } else {
+            document.getElementById('submitButton').disabled = true;
+        }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,464 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <title>Techbuy | Product Info</title>
+  <link rel="stylesheet" href="{% static '/css/product-details.css' %}">
+</head>
+<body>
+
+  <section id="header">
+    <div class="container-fluid title-section">
+      <div class="row">
+        <div class="col-lg-3 col-md-4 col-5">
+          <img class="img-fluid pe-0 mb-0 logo" src="{% static '/images/logo/logo.png' %}">
+        </div>
+        <div class="col-6 d-flex flex-md-row flex-column justify-content-center align-items-md-center">
+          <div class="home-title me-5">
+            <a href="{% url 'home' %}" class="text-dark"><i class="bi bi-house-door-fill content-size "></i></a>
+            <a href="{% url 'home' %}" class="d-inline text-decoration-none text-dark content-size">HOME</a>
+          </div>
+          <div class="about-us-title me-5">
+            <a href="{% url 'about_us' %}" class="text-dark"><i class="bi bi-person-square content-size"></i></a>
+            <a href="{% url 'about_us' %}" class="d-inline text-decoration-none text-dark content-size">ABOUT US</a>
+          </div>
+          <div class="contact-us me-5">
+            <a href="{% url 'contact' %} " class="text-dark"><i class="bi bi-linkedin content-size"></i></a>
+            <a href="{% url 'contact' %}" class="d-inline text-decoration-none text-dark content-size">CONTACT US</a>
+          </div>  
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="header-bottom">
+    <div class="container-fluid hf">
+      <div class="row justify-content-md-end">
+        <div class="col-8 col-md-4 col-lg-5 pt-2 hf-1 mt-1">
+          <div>
+             <form id="searchForm" method="POST" action="{% url 'search_results' %}">
+                {% csrf_token %}
+                <input type="text" class="search-bar form-field" id="searchData" name="search-data" placeholder="Search your products" oninput="checkInput()">
+                <button class="lens" type="submit" id="submitButton" disabled><i class="bi bi-search search-icon"></i></button>
+            </form>
+          </div>
+        </div>
+        <div class="col-1 pt-3 col-md-1 d-flex align-content-center justify-content-center hf-contents mt-1">
+            {% if user %}
+              <a href="{% url 'dashboard' %}" class="d-none d-md-inline-block text-decoration-none text-dark username2">{{ user.user_name }}</p></a>
+              <div class="profile-div2 ms-2">
+                {% if user.user_profile_img %}
+                    <a href="{% url 'dashboard' %}"><img class="profile-pic2" src="{{user.user_profile_img.url}}"></a>
+                {% endif %}
+              </div>
+            {% else %}
+              <a href="{% url 'login' %}" class="d-none d-md-inline-block text-decoration-none text-dark">LOGIN</p></a>
+              <i class="bi bi-person-circle ps-1 g-cursor"></i>
+            {% endif %}
+        </div>
+        <div class="col-1 col-md-1 pt-3 d-flex align-content-center justify-content-center hf-contents mt-1">
+          {% if user %}
+              <a href="{% url 'cart' %}" class="d-none d-md-inline-block text-decoration-none text-dark">CART</a>
+              <i class="bi bi-cart4 ps-1 g-cursor"></i>
+          {% else %}
+              <a href="{% url 'login' %}" class="d-none d-md-inline-block text-decoration-none text-dark">CART</a>
+              <i class="bi bi-cart4 ps-1 g-cursor"></i>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <nav class="navbar navbar-expand navbar-light">
+    <div class="container-fluid justify-content-around">
+      <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav justify-content-evenly">
+              {% for i in category_data %}
+                  <li class="nav-item">
+                      <a class="nav-link" href="{% url 'category' i.category_id %}">{{i.category_name}}</a>
+                  </li>
+              {% endfor %}
+          </ul>
+      </div>
+    </div>
+  </nav>
+
+  <section>
+
+    <div class="container-fluid mt-2 mb-3">
+      <div class="row no-gutters">
+          <div class="col-md-5 pr-2">
+              <div class="card">
+                  
+                  <div class="carousel-container">
+                      <div id="carouselExampleIndicators" class="carousel slide">
+                          <div class="carousel-inner">
+                            {% for i in product_data %}
+                              {% for image in i.images.all %}
+                                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                    <img src="{{ image.product_image.url }}" class="d-block w-100" alt="...">
+                                </div>
+                              {% endfor %}
+                            {% endfor %}
+                          </div>
+                      </div>
+                  </div>
+                  <div class="thumbnail-container">
+                    {% for i in product_data %}
+                      {% for image in i.images.all %}
+                        <img src="{{ image.product_image.url }}" class="thumbnail" data-target="#carouselExampleIndicators" data-slide-to="{{ forloop.counter0 }}">
+                      {% endfor %}
+                    {% endfor %}
+
+                  </div>    
+              </div>
+              <div class="card mt-2">
+                  <h6>Reviews</h6>
+                  <div class="d-flex flex-row">
+                      {% for i in product_data %}
+                          <div class="stars">
+                              {% for star_index in star_range %}
+                                  {% if star_index < i.user_rating %}
+                                      <i class="bi bi-star-fill"></i>
+                                  {% elif i.user_rating_half and star_index == i.user_rating %}
+                                      <i class="bi bi-star-half"></i>
+                                  {% else %}
+                                      <i class="bi bi-star"></i>
+                                  {% endif %}
+                              {% endfor %}
+                          </div>
+                          <span class="ml-1 font-weight-bold"> {{product_obj.user_rating|floatformat:1}}</span>
+                      {% endfor %}
+                  </div>
+                  <hr>
+                  <div class="badges"> 
+                    <span class="badge bg-dark ">All ({{review_count}})</span>
+                    <span class="badge bg-dark "> <i class="bi bi-chat-left-dots-fill"></i> {{filled_review_counts}} </span>
+                    <span class="badge bg-warning"> 
+                      <i class="bi bi-star-fill"></i>
+                      <i class="bi bi-star-fill"></i>
+                      <i class="bi bi-star-fill"></i>
+                      <i class="bi bi-star-fill"></i>
+                      <i class="bi bi-star-fill"></i>
+                      <span class="ml-1">{{review_count}}</span>
+                    </span> 
+                  </div>
+
+                  <hr>
+
+              </div>
+          </div>
+
+          <div class="col-md-7">
+
+            <div class="card">
+              <div class="d-flex flex-row align-items-center">
+                  {% for i in product_data %}
+                      <div class="p-ratings">
+                          {% for star_index in star_range %}
+                              {% if star_index < i.user_rating %}
+                                  <i class="bi bi-star-fill"></i>
+                              {% elif i.user_rating_half and star_index == i.user_rating %}
+                                  <i class="bi bi-star-half"></i>
+                              {% else %}
+                                  <i class="bi bi-star"></i>
+                              {% endif %}
+                          {% endfor %}
+                  {% endfor %}
+                      </div>
+                      <span class="ml-1 font-weight-bold"> {{product_obj.user_rating|floatformat:1}}</span>
+              </div>
+
+              <div class="about">
+                {% for i in product_data %}
+                  <h3>{{ i.product_name }}</h3><span class="fs-5">
+                    {% if cat_id == 3 %}
+                        {% for spec in i.phone.all %}
+                          ({{spec.color}}, {% widthratio spec.spec_ram 1000 1 %}GB, {% widthratio spec.spec_storage 1000 1 %}GB)
+                        {% endfor %}
+                    {% elif cat_id == 1 %}
+                      {% for spec in i.audio.all %}
+                        {% if spec.spec_playback != 0 %}
+                            {{spec.spec_playback}}H playback,
+                        {% endif %}
+                        {% if spec.spec_bluetooth != 0 %}
+                            {{spec.spec_bluetooth}} Bluetooth,
+                        {% endif %}
+                        {% if spec.spec_latency != 0 %}
+                            {{spec.spec_latency}}ms
+                        {% endif %}
+                      {% endfor %}
+                    {% elif cat_id == 5 %}
+                      {% for spec in i.computer.all %}
+                        {{spec.spec_processor}}, {% widthratio spec.spec_ram 1000 1 %}GB,{{spec.spec_os}}
+                      {% endfor %}
+                    {% elif cat_id == 2 %}
+                      {% for spec in i.computer.all %}
+                            {{spec.spec_processor}}, {% widthratio spec.spec_ram 1000 1 %}GB,{{spec.spec_os}}
+                      {% endfor %}
+                    {% endif %}</span>
+                  <div class="d-block">
+                      <div class="d-flex align-items-center justify-contents-center">
+                          {% if i.has_discount  %}
+                            <h4 class="font-weight-bold mt-3 me-2">₹{{i.discount_price|intcomma}}.00</h4>
+                            <span class="small text-secondary text-decoration-line-through mt-2">₹{{i.product_price|intcomma}}.00</span>
+                          {% else %}
+                            <h4 class="font-weight-bold mt-3">₹{{i.product_price|intcomma}}.00</h4>
+                          {% endif %}
+                      </div>
+                  </div>
+                {% endfor %}
+              </div>
+
+              <div class="buttons">
+                <form method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-warning btn-long" name="addtocart" data-bs-toggle="modal" data-bs-target="#CartModal">Add to Cart</button>
+                    <button type="submit" class="btn btn-success btn-long" name="buyitnow" data-bs-toggle="modal" data-bs-target="#BuyModal">Buy it Now</button>
+                    <button type="submit" class="btn btn-light wishlist" name="wishlist" data-bs-toggle="modal" data-bs-target="#WishlistModal"> <i class="bi bi-bookmark-heart"></i></button>
+                </form>
+              </div>
+
+              <hr>
+
+              <div class="product-description">
+
+                {% if cat_id == 3 %}
+                  {% for i in product_data %}
+                    {% for spec in i.phone.all %}
+                        <div>
+                          <span class="font-weight-bold">Color:</span><span>{{spec.color}}</span>
+                        </div>
+                    {% endfor %}
+                  {% endfor %}
+                {% endif %}
+
+                <div class="d-flex flex-row align-items-center"> 
+                  <i class="fa fa-calendar-check-o"></i>     
+                  <span class="ml-1">Delivery in 15-45 days</span>
+                </div>
+
+                <div class="mt-2"> 
+
+                  <span class="font-weight-bold">Description</span>
+
+                  {% for i in product_data %}
+                    <p>{{i.product_description}}</p>
+                  {% endfor %}
+
+                  <div class="mt-2"> 
+                    <span class="font-weight-bold fw-bold">PRODUCT SPECIFICATIONS</span>
+                  </div>
+
+                  <div class="bullets">
+                    {% for i in product_data %}
+                      {% if cat_id == 3 %}
+                        {% for spec in i.phone.all %}
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">{% widthratio spec.spec_ram 1000 1 %} GB RAM | {% widthratio spec.spec_storage 1000 1 %} GB ROM</span> </div>
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">{{ spec.spec_display_size }} Inch Full HD+ Display</span> </div>
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">{{spec.spec_camera}}MP Back Camera | {{spec.spec_os}}</span> </div>
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">{{spec.spec_battery}} mAh Lithium-ion Battery</span> </div>
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">{{spec.spec_processor}} Processor</span> </div>
+                        {% endfor %}
+                      {% elif cat_id == 5 %}
+                        {% for spec in i.computer.all %}
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">{% widthratio spec.spec_ram 1000 1 %} GB RAM | {% if spec.spec_storage >= 1000000 %} {{ spec_storage }} TB ROM{% else %}{{ spec_storage }} GB ROM {% endif %} </span> </div>
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">{{spec.spec_gpu}}</span> </div>
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">{{ spec.spec_display_size }} Inch Full HD+ Display</span> </div>
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">{{ spec.spec_horizontal_resolution }} x {{ spec.spec_vertical_resolution }}  Resolution</span> </div>
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">{{spec.spec_os}}</span> </div>
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">{{spec.spec_refresh_rate}}Hz Refresh Rate</span> </div>
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">{{spec.spec_processor}} Processor</span> </div>
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">{{spec.warranty}} Years Warranty</span> </div>
+                        {% endfor %}
+                      {% elif cat_id == 2 %}
+                        {% for spec in i.computer.all %}
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">{% widthratio spec.spec_ram 1000 1 %} GB RAM | {% if spec.spec_storage >= 1000000 %} {{ spec_storage }} TB ROM{% else %}{{ spec_storage }} GB ROM {% endif %} </span> </div>
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">{{spec.spec_gpu}}</span> </div>
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">{{ spec.spec_display_size }} Inch Full HD+ Display</span> </div>
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">{{ spec.spec_horizontal_resolution }} x {{ spec.spec_vertical_resolution }}  Resolution</span> </div>
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">OS: {{spec.spec_os}}</span> </div>
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">{{spec.spec_refresh_rate}}Hz Refresh Rate</span> </div>
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">{{spec.spec_processor}} Processor</span> </div>
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">{{spec.warranty}} Years Warranty</span> </div>
+                        {% endfor %}
+                      {% elif cat_id == 4 %}
+                        {% for spec in i.television.all %}
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">{{ spec.spec_display_size }} Inch Full HD+ Display</span> </div>
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">{{ spec.spec_horizontal_resolution }} x {{ spec.spec_vertical_resolution }}  Resolution</span> </div>
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">{{spec.spec_os}}</span> </div>
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">{{spec.warranty}} Years Warranty</span> </div>
+                        {% endfor %}
+                      {% elif cat_id == 1 %}
+                        {% for spec in i.audio.all %}
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">Brand: {{ spec.product_brand }}</span> </div>
+                        {% if spec.spec_bluetooth != 0 %}<div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">Bluetooth: {{ spec.spec_bluetooth }}</span> </div>{% endif %}
+                        {% if spec.spec_playback != 0 %}<div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">Playback: {{spec.spec_playback}}H</span> </div>{% endif %}
+                        {% if spec.spec_latency != 0 %}<div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">Latency: {{ spec.spec_latency }}ms</span> </div>{% endif %}
+                        <div class="d-flex align-items-center"> <span class="dot"></span> <span class="bullet-text">{{spec.warranty}} Years Warranty</span> </div>
+                        {% endfor %}
+                      {% endif %}
+                    {% endfor %}
+
+                  </div>
+                </div>
+
+                <div class="mt-2"> 
+                  <span class="font-weight-bold">SELLER</span> 
+                </div>
+
+                {% for i in product_data %}
+                    <div class="ml-1 comment-profile">
+                      <span class="username">{{i.seller.seller_company_name}}</span>
+                    </div>
+                {% endfor %}
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="card mt-2"> 
+            <span>Similar items:</span>
+            <div class="similar-products mt-2 d-flex flex-row justify-content-between">
+
+            {% for i in product_set %}
+              <a class="text-decoration-none text-dark" href="{% url 'product_details' i.product_id %}">
+              <div class="card border p-1" style="width: 9rem;margin-right: 3px;"> <img src="{{i.images.first.product_image.url}}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h6 class="card-title text-center">₹{{i.product_price|intcomma}}.00</h6></a>
+                </div>
+              </div>
+            {% endfor %}
+
+              </div>
+            </div>
+          </div>
+
+          <div class="container-fluid mt-2">
+            <div class="row">
+              <div class="col-12">
+                <div class="card mt-2">
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                      <h4>Ratings & Review</h4>
+                    </div>
+                    <div class="rate-product">
+                      <button class="review-button" data-bs-toggle="modal" data-bs-target="#ReviewModal">Rate Product</button>
+                      
+                      <div class="modal fade" id="ReviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel">Add Review</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <form method="POST">
+                                  {% csrf_token %}
+                                <div class="form-group mb-3">
+                                  <label for="rating" class="fs-5">Rate this Product</label>
+                                  <div class="rating">
+                                    <i class="bi bi-star" data-rating="1"></i>
+                                    <i class="bi bi-star" data-rating="2"></i>
+                                    <i class="bi bi-star" data-rating="3"></i>
+                                    <i class="bi bi-star" data-rating="4"></i>
+                                    <i class="bi bi-star" data-rating="5"></i>
+                                  </div>
+                                  <input type="hidden" name="rating" id="rating" value="5">
+                                </div>
+                            
+                                <div class="form-group">
+                                  <label for="review" class="fs-5">Review this Product</label>
+                                  <input type="text" class="form-control mb-3" id="review" placeholder="Enter your review" name="review">
+                                </div>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {% for review in reviews_data %}
+                      <div class="card">
+                          <div class="card-body">
+                            <div class="container">
+                              <div class="row">
+                                <div class="col-12">
+                                  <div class="card">
+                                    <div class="d-flex mb-3">
+                                      <div class="profile-div me-2">
+                                        <img class="profile-pic" src="{{review.user.user_profile_img.url}}">
+                                      </div>
+                                      <div class="user-name align-content-center">
+                                        <span class="small text-secondary">{{review.user.user_name}}</span>
+                                      </div>
+                                    </div>
+                                    <div class="user-rating d-flex">
+                                      <div class="d-flex me-2">
+                                        {% for star in star_range %}
+                                          {% if review.user_rating > star %}
+                                            <i class="bi bi-star-fill"></i>
+                                          {% else %}
+                                            <i class="bi bi-star"></i>
+                                          {% endif %}
+                                        {% endfor %}
+                                      </div>
+                                      <div>
+                                        {% if review.user_rating == 5 %}
+                                            <span class="text-success small fw-bold">Excellent</span>
+                                        {% elif review.user_rating >= 3 %}
+                                            <span class="text-info small fw-bold">Good</span>
+                                        {% elif review.user_rating < 3 %}
+                                            <span class="text-warning small fw-bold">Average</span>
+                                        {% elif review.user_rating < 2 %}
+                                            <span class="text-danger small fw-bold">Bad</span>
+                                        {% endif %}
+                                      </div>
+                                    </div>
+                                    <div class="mb-2">
+                                      <p class="review-date text-secondary mb-0">Reviewed on {{review.review_date}}</p>
+                                    </div>
+                                    <div>
+                                      <span class="user-review">{{review.user_review}}</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                      </div>
+                  {% endfor %}
+
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </section>
+
+  
+
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+
+<script src="{% static 'script/product-details.js' %}"></script>
+
+</html> 

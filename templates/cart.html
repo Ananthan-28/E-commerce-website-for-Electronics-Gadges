@@ -1,0 +1,211 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <title>Cart</title>
+  <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+</head>
+<body>
+
+  <section id="header-top">
+    <div class="container-fluid title-top">
+      <div class="row">
+        <div class="col-lg-3 col-md-4 col-5 text-center pt-3">
+          <p class="lead">Welcome to Techbuy</p>
+        </div>
+        <div class="col-6 d-flex flex-md-row flex-column justify-content-center align-items-md-center align-items-sm-start">
+          <div class="store-locator me-4">
+            <i class="bi bi-geo-alt content-size"></i>
+            <a href="#" class="d-inline text-decoration-none text-dark pe-1 ">Store Locations</a>
+          </div>
+          <div class="track-orders me-4">
+            <i class="bi bi-truck content-size"></i>
+            <a href="#" class="d-inline text-decoration-none text-dark pe-1">Track your order</a>
+          </div>
+          <div class="my-acc me-5">
+            <i class="bi bi-person content-size"></i>
+            <a href="{% url 'my_account' %}" class="d-inline text-decoration-none text-dark pe-1">My Account</a>
+          </div>  
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="header">
+    <div class="container-fluid title-section">
+      <div class="row">
+        <div class="col-lg-3 col-md-4 col-5">
+          <img class="img-fluid pe-0 mb-0 logo" src="{% static 'images/logo/logo.png' %}">
+        </div>
+        <div class="col-6 d-flex flex-md-row flex-column justify-content-center align-items-md-center ">
+          <div class="home-title me-5">
+            <a href="{% url 'home' %}" class="text-dark"><i class="bi bi-house-door-fill content-size "></i></a>
+            <a href="{% url 'home' %}" class="d-inline text-decoration-none text-dark content-size">HOME</a>
+          </div>
+          <div class="about-us-title me-5">
+            <a href="{% url 'about_us' %}" class="text-dark"><i class="bi bi-person-square content-size"></i></a>
+            <a href="{% url 'about_us' %}" class="d-inline text-decoration-none text-dark content-size">ABOUT US</a>
+          </div>
+          <div class="contact-us me-5">
+            <a href="{% url 'contact' %} " class="text-dark"><i class="bi bi-linkedin content-size"></i></a>
+            <a href="{% url 'contact' %}" class="d-inline text-decoration-none text-dark content-size">CONTACT US</a>
+          </div>  
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="header-bottom">
+    <div class="container-fluid hf mb-3">
+      <div class="row justify-content-md-end">
+        <div class="col-8 col-md-4 col-lg-5 pt-2 hf-1 mt-1">
+          <div>
+             <form id="searchForm" method="POST" action="{% url 'search_results' %}">
+                {% csrf_token %}
+                <input type="text" class="search-bar form-field" id="searchData" name="search-data" placeholder="Search your products" oninput="checkInput()">
+                <button class="lens" type="submit" id="submitButton" disabled><i class="bi bi-search search-icon"></i></button>
+            </form>
+          </div>
+        </div>
+        <div class="col-1 pt-3 col-md-1 d-flex align-content-center justify-content-center hf-contents mt-1">
+            {% if user %}
+              <a href="{% url 'dashboard' %}" class="d-none d-md-inline-block text-decoration-none text-dark username">{{ user.user_name }}</p></a>
+              <div class="profile-div ms-2">
+                {% if user.user_profile_img %}
+                    <a href="{% url 'dashboard' %}"><img class="profile-pic" src="{{user.user_profile_img.url}}"></a>
+                {% endif %}
+              </div>
+            {% else %}
+              <a href="{% url 'login' %}" class="d-none d-md-inline-block text-decoration-none text-dark">LOGIN</p></a>
+              <i class="bi bi-person-circle ps-1 g-cursor"></i>
+            {% endif %}
+        </div>
+        <div class="col-1 col-md-1 pt-3 d-flex align-content-center justify-content-center hf-contents mt-1">
+          {% if user %}
+              <a href="{% url 'cart' %}" class="d-none d-md-inline-block text-decoration-none text-dark">CART</a>
+              <i class="bi bi-cart4 ps-1 g-cursor"></i>
+          {% else %}
+              <a href="{% url 'login' %}" class="d-none d-md-inline-block text-decoration-none text-dark">CART</a>
+              <i class="bi bi-cart4 ps-1 g-cursor"></i>
+          {% endif %}
+        </div>
+    </div>
+    </div>
+  </section>
+  
+  <section id="cart-details">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-12 d-flex position-relative">
+                        <p class="lead fs-4 ps-4">From Saved Address</p>
+                        <div class="address-button-div ">
+                            <a class="text-decoration-none" href="{% url 'my_address' %}"><button class="position-absolute end-0 btn btn-lg address-button">Enter delivery pincode</button></a>
+                        </div>
+                    </div>
+                </div>
+
+                {% for item in cart_data %}
+                <div class="col-12">
+                    <div class="card mt-2">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12 pt-4 d-flex">
+                                    <div class="col-2">
+                                        <a href="{% url 'product_details' item.product.product_id %}" class="text-decoration-none"><img class="img-fluid mb-2" src="{{ item.product.images.first.product_image.url }}"></a>
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <form method="POST" class="d-flex align-items-center">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="product_data" value="{{ item.product.product_id }}">
+                                                <input type="hidden" name="cart_id" value="{{ item.cart_id }}">
+                                                <button id="decrement{{ forloop.counter }}" type="submit" name="cart_min" class="btn rounded-circle" style="width: 25px; height: 25px; padding: 0; margin-right: 3px; background-color: rgb(169, 157, 157);" onclick="decrement({{ forloop.counter }})">-</button>
+                                                <input type="text" id="number{{ forloop.counter }}" name="cart_no" class="form-control text-center" style="width: 55px; height: 35px; padding: 0; line-height: 50px;" value="{{item.cart_quantity}}" readonly>
+                                                <button class="btn rounded-circle" type="submit" name="cart_add" style="width: 25px; height: 25px; padding: 0; margin-left: 3px; background-color: rgb(169, 157, 157);" onclick="increment({{ forloop.counter }})">+</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="col-7 ps-6">
+                                        <a href="{% url 'product_details' item.product.product_id %}" class="text-decoration-none"><p class="text-primary brand-name mb-0">{{ item.product.product_name }} {% if item.product.category_id == 3 %} {% for spec in item.product.phone.all %} ({{ spec.color }},{% widthratio spec.spec_ram 1000 1 %}GB, {% widthratio spec.spec_storage 1000 1 %}GB) {% endfor %} {% endif %}</p></a>
+                                        <p class="text-secondary seller-name mb-3">Seller:{{ item.product.seller }}</p>
+                                        {% if item.product.has_discount %}
+                                            <p class="class mb-5"><span class="text-decoration-line-through text-secondary og-price">₹{{item.real_price|intcomma}}</span> <span class="fw-bold fs-5">₹{{ item.total_price|intcomma }}</span>
+                                            <span class="text-success">{{item.product.discount_percentage}}% off 1 offer applied <i class="bi bi-info-circle-fill"></i></span></p>
+                                        {% else %}
+                                            <span class="fw-bold fs-5">₹{{ item.real_price|intcomma }}</span>
+                                        {% endif %}
+                                        <div class="d-flex">
+                                            <div class="me-4 mt-2">
+                                                <a href="{% url 'save-later' item.cart_id %}" class="text-decoration-none text-dark"><button class="btn btn-outline-warning choices">SAVE FOR LATER</button></a>
+                                            </div>
+                                            <div class="mt-2">
+                                                <a href="{% url 'remove-cart' item.cart_id %}" class="text-decoration-none text-dark"><button class="btn btn-outline-danger choices">REMOVE</button></a>
+                                            </div>
+                                            <div>
+                                                <button class="place-order-button position-absolute end-0 me-2 choices">Place Order</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3 ps-5">
+                                        <p class="delivery-details">Delivery by Sun Jan  |<span class="text-decoration-line-through text-secondary">₹40</span><span class="text-success">Free</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="col-md-4 ps-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="price-title text-secondary">
+                            PRICE DETAILS
+                        </div>
+                        <div class="d-flex position-relative mt-3">
+                            <p>Price ({{cart_count}} item)</p>
+                            <div class="address-button-div">
+                                <p class="position-absolute end-0">₹{{total_price|intcomma}}</p>
+                            </div>
+                        </div>
+                        <div class="d-flex position-relative mt-3">
+                            <p>Discount</p>
+                            <div class="address-button-div">
+                                <p class="position-absolute end-0 text-success">-₹{{total_discount|intcomma}}</p>
+                            </div>
+                        </div>
+                        <div class="d-flex position-relative mt-3">
+                            <p>Delivery Charges</p>
+                            <div class="address-button-div">
+                                <p class="position-absolute end-0"><span class="text-decoration-line-through">₹40 </span><span class="text-success">Free</span></p>
+                            </div>
+                        </div>
+                        <div class="d-flex position-relative mt-4 price-decoration">
+                            <p class="price-body fs-4">Total Amount</p>
+                            <div class="address-button-div">
+                                <p class="position-absolute end-0 fs-4 price-body">₹{{net_amount|intcomma}}</p>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <span class="text-success">You'll save ₹{{total_discount|intcomma}} on this order </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script src="{% static 'script/cart.js' %}"></script>
+
+</body>
+</html>
