@@ -2,8 +2,8 @@ from django.db import models
 
 from SellerApp.models import *
 from django.core.validators import MaxValueValidator, MinValueValidator
+import uuid
 
-# Create your models here.
 class UserDataModel(models.Model):
     user_id = models.AutoField(primary_key=True)
     user_name = models.CharField(max_length=50,unique=True)
@@ -84,8 +84,8 @@ class OrderDetailsModel(models.Model):
     address = models.ForeignKey(UserAddressDataModel, on_delete=models.CASCADE)
     user_order_quantity = models.IntegerField()
     order_date = models.DateTimeField(auto_now_add=True)
-    billing_ref_no = models.CharField(max_length=80)
-    status = models.TextField(max_length=10)
+    billing_ref_no = models.UUIDField(default=uuid.uuid4,unique=True)
+    status = models.TextField(max_length=10,default='Order Confirmed')
 
     class Meta:
         db_table = 'order_details_model'

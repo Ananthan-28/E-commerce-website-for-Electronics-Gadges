@@ -91,7 +91,12 @@
         <div class="col-1 col-md-1 pt-3 d-flex align-content-center justify-content-center hf-contents mt-1">
           {% if user %}
               <a href="{% url 'cart' %}" class="d-none d-md-inline-block text-decoration-none text-dark">CART</a>
-              <i class="bi bi-cart4 ps-1 g-cursor"></i>
+              <i class="bi bi-cart4 ps-1 g-cursor position-relative">
+                  <span class="position-absolute top-25 start-75 translate-middle badge rounded-pill bg-warning">
+                    {{cart_no}}
+                    <span class="visually-hidden">unread messages</span>
+                  </span>
+              </i>
           {% else %}
               <a href="{% url 'login' %}" class="d-none d-md-inline-block text-decoration-none text-dark">CART</a>
               <i class="bi bi-cart4 ps-1 g-cursor"></i>

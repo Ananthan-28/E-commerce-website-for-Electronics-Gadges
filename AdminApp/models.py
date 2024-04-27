@@ -1,7 +1,6 @@
 from django.db import models
+from django.utils import timezone
 
-
-# Create your models here.
 class AdminDataModel(models.Model):
     adm_ID = models.AutoField(primary_key=True)
     adm_username = models.CharField(max_length=20,unique=True)
@@ -58,6 +57,11 @@ class EventModel(models.Model):
 
     def __str__(self):
         return self.event_name
+
+    def save(self, *args, **kwargs):
+        if self.discount_end_date <= timezone.now():
+            self.status = 'Inactive'
+        super().save(*args, **kwargs)
 
 
 

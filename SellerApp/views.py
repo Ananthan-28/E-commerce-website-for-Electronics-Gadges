@@ -10,20 +10,19 @@ from AdminApp.models import ProductCategoryModel
 
 # Create your views here.
 def home(request):
-    seller_id = request.session['user_id']
-    seller_obj = SellerDataModel.objects.get(seller_id=seller_id)
-    product_data = ProductModel.objects.filter(seller=seller_obj)
-    product_active = product_data.filter(product_status='active').count()
-    product_inactive = product_data.filter(product_status='inactive').count()
-    low_stock=0
-    no_stock=0
-    for data in product_data:
-        if data.seller_product_stock ==0:
-            no_stock +=1
-        elif data.seller_product_stock <=10:
-            low_stock +=1
-
-    if 'user_id' in request.session:
+    if 'seller_id' in request.session:
+        seller_id = request.session['seller_id']
+        seller_obj = SellerDataModel.objects.get(seller_id=seller_id)
+        product_data = ProductModel.objects.filter(seller=seller_obj)
+        product_active = product_data.filter(product_status='active').count()
+        product_inactive = product_data.filter(product_status='inactive').count()
+        low_stock=0
+        no_stock=0
+        for data in product_data:
+            if data.seller_product_stock ==0:
+                no_stock +=1
+            elif data.seller_product_stock <=10:
+                low_stock +=1
         return render (request,'seller_dashboard.html',{'seller':seller_obj,'product_active':product_active,'product_inactive':product_inactive,'low_stock':low_stock,'no_stock':no_stock})
     else:
         return redirect('seller_login')
@@ -32,8 +31,8 @@ def home(request):
 def account_details(request):
     email_error = None
     phone_error = None
-    if 'user_id' in request.session:
-        seller_id = request.session['user_id']
+    if 'seller_id' in request.session:
+        seller_id = request.session['seller_id']
         seller_obj = SellerDataModel.objects.get(seller_id=seller_id)
         if request.method=="POST":
             if 'user_personal' in request.POST:
@@ -66,8 +65,8 @@ def account_details(request):
         return redirect('seller_login')
 
 def my_listing(request):
-    if 'user_id' in request.session:
-        seller_id = request.session['user_id']
+    if 'seller_id' in request.session:
+        seller_id = request.session['seller_id']
         seller_obj = SellerDataModel.objects.get(seller_id=seller_id)
         product_data = ProductModel.objects.filter(seller=seller_obj)
         product_active = product_data.filter(product_status='active').count()
@@ -138,8 +137,8 @@ def my_listing(request):
         return redirect('seller_login')
 
 def add_listing(request):
-    if 'user_id' in request.session:
-        seller_id = request.session['user_id']
+    if 'seller_id' in request.session:
+        seller_id = request.session['seller_id']
         seller=SellerDataModel.objects.get(seller_id=seller_id)
 
         if request.method=="POST":
@@ -418,8 +417,8 @@ def add_listing(request):
         return redirect('seller_login')
 
 def add_discount(request):
-    if 'user_id' in request.session:
-        seller_id = request.session['user_id']
+    if 'seller_id' in request.session:
+        seller_id = request.session['seller_id']
         seller=SellerDataModel.objects.get(seller_id=seller_id)
         pro_data = ProductModel.objects.filter(seller=seller)
         event_data = EventModel.objects.filter(status='Active')
@@ -501,7 +500,6 @@ def seller_registration(request):
     return render(request,'sellerreg.html')
 
 def seller_login(request):
-    print(dict(request.session))
     email_error = ''
     otp_error =''
     show_content = False
@@ -516,7 +514,6 @@ def seller_login(request):
                 show_content = True
                 verified = True
                 otp = send_otp(request)
-                print(otp)
                 send_mail(
                     "Seller Login OTP",
                     f"Your OTP is:{otp} ",
@@ -536,7 +533,7 @@ def seller_login(request):
             totp = pyotp.TOTP(otp_key,interval=300)
             if totp.verify(submitted_otp):
                 seller_obj = SellerDataModel.objects.get(seller_email=email_data)
-                request.session['user_id'] = seller_obj.seller_id
+                request.session['seller_id'] = seller_obj.seller_id
 
                 del request.session['otp_key']
 
@@ -556,6 +553,6 @@ def seller_login(request):
 
 
 def seller_logout(request):
-    if 'user_id' in request.session:
-        del request.session['user_id']
+    if 'seller_id' in request.session:
+        del request.session['seller_id']
     return redirect('seller_login')

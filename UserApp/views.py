@@ -42,8 +42,10 @@ def home(request):
     product_rating(phone_data)
 
     user=None
+    cart_no = None
     if 'user_id' in request.session:
         user = UserDataModel.objects.get(user_id=request.session['user_id'])
+        cart_no = CartDataModel.objects.filter(user__user_id =request.session['user_id']).count()
 
     return render(request,'home.html',{'tv_data':tv_data,
                                                             'laptop_data':laptop_data,
@@ -52,11 +54,14 @@ def home(request):
                                                             'event_data':event_data,
                                                             'star_range':star_range,
                                                             'user_rating_half':user_rating_half,
-                                                             'user': user})
+                                                             'user': user,
+                                                            'cart_no':cart_no})
 
 def search_results(request):
     user = None
+    cart_no =None
     if 'user_id' in request.session:
+        cart_no = CartDataModel.objects.filter(user__user_id=request.session['user_id']).count()
         user = UserDataModel.objects.get(user_id=request.session['user_id'])
 
     category_data = ProductCategoryModel.objects.all()
@@ -114,12 +119,14 @@ def search_results(request):
         user_rating_half = None
         product_rating(product_data)
 
-    return render(request,'search-details.html',{'user': user,'category_data':reordered_category_data,'product_data':product_data,'star_range':star_range,'user_rating_half':user_rating_half,'search_data':search_data,'brand_data':brand_data})
+    return render(request,'search-details.html',{'user': user,'category_data':reordered_category_data,'product_data':product_data,'star_range':star_range,'user_rating_half':user_rating_half,'search_data':search_data,'brand_data':brand_data,'cart_no':cart_no})
 
 def contact(request):
     user = None
+    cart_no = None
     if 'user_id' in request.session:
         user = UserDataModel.objects.get(user_id=request.session['user_id'])
+        cart_no = CartDataModel.objects.filter(user__user_id=request.session['user_id']).count()
         if request.method == "POST":
             name=request.POST.get('name')
             email = request.POST.get('email')
@@ -135,13 +142,15 @@ def contact(request):
             )
             return redirect('contact')
 
-    return render(request,'contactus.html',{'user':user})
+    return render(request,'contactus.html',{'user':user,'cart_no':cart_no})
 
 def about_us(request):
     user = None
+    cart_no = None
     if 'user_id' in request.session:
         user = UserDataModel.objects.get(user_id=request.session['user_id'])
-    return render(request,'aboutus.html',{'user':user})
+        cart_no = CartDataModel.objects.filter(user__user_id=request.session['user_id']).count()
+    return render(request,'aboutus.html',{'user':user,'cart_no':cart_no})
 
 def category_function(request,cat_id):
     category_data = ProductCategoryModel.objects.all()
@@ -165,8 +174,10 @@ def category_function(request,cat_id):
         event_data = event_data.order_by('-event_id')[:3]
 
     user = None
+    cart_no = None
     if 'user_id' in request.session:
         user = UserDataModel.objects.get(user_id=request.session['user_id'])
+        cart_no = CartDataModel.objects.filter(user__user_id = request.session['user_id']).count()
 
     return render(request,'category_template.html',{'category_data': reordered_category_data,
                                                                         'brand_data':brand_data,
@@ -176,7 +187,8 @@ def category_function(request,cat_id):
                                                                         'event_data':event_data,
                                                                         'star_range':star_range,
                                                                         'user_rating_half':user_rating_half,
-                                                                        'user':user})
+                                                                        'user':user,
+                                                                        'cart_no':cart_no})
 
 def product_details(request,pro_id):
     product_data = ProductModel.objects.filter(product_id=pro_id)
@@ -234,8 +246,10 @@ def product_details(request,pro_id):
         product_set = ProductModel.objects.filter(category_id__category_name=cat_name)
 
     user = None
+    cart_no = None
     if 'user_id' in request.session:
         user = UserDataModel.objects.get(user_id=request.session['user_id'])
+        cart_no = CartDataModel.objects.filter(user__user_id=request.session['user_id']).count()
 
 
     if request.method == "POST":
@@ -277,7 +291,8 @@ def product_details(request,pro_id):
                                                                         'user':user,
                                                                         'reviews_data':reviews_data,
                                                                         'review_count': review_count,
-                                                                        'filled_review_counts':filled_review_counts})
+                                                                        'filled_review_counts':filled_review_counts,
+                                                                        'cart_no':cart_no})
 
 def sign_up(request):
     user_error = ''
@@ -351,15 +366,17 @@ def login(request):
 
 def dashboard(request):
     user = None
+    cart_no = None
     if 'user_id' not in request.session:
         return redirect('home')
     elif 'user_id' in request.session:
         user = UserDataModel.objects.get(user_id=request.session['user_id'])
+        cart_no = CartDataModel.objects.filter(user__user_id=request.session['user_id']).count()
         if request.method == "POST" and 'profile_upd' in request.FILES:
             profile_pic = request.FILES.get("profile_upd")
             user.user_profile_img = profile_pic
             user.save()
-    return render(request, 'dashboard.html', {'user': user})
+    return render(request, 'dashboard.html', {'user': user,'cart_no':cart_no})
 
 
 def cart(request):
@@ -420,10 +437,12 @@ def cart_save(request,cart_id):
 
 def my_account(request):
     user = None
+    cart_no = None
     if 'user_id' not in request.session:
         return redirect('home')
     elif 'user_id' in request.session:
         user = UserDataModel.objects.get(user_id=request.session['user_id'])
+        cart_no = CartDataModel.objects.filter(user__user_id=request.session['user_id']).count()
         if request.method == "POST":
             if 'profile_upd' in request.FILES:
                 profile_pic = request.FILES.get("profile_upd")
@@ -434,7 +453,7 @@ def my_account(request):
                 user.user_name = username
                 user.save()
 
-    return render(request,'my_account.html',{'user':user})
+    return render(request,'my_account.html',{'user':user,'cart_no':cart_no})
 
 
 def change_password(request):
@@ -489,10 +508,12 @@ def change_password(request):
     return render(request, 'change-password.html', {'password_error': password_error,'otp_error': otp_error,'password_success': password_success})
 def my_address(request):
     user = None
+    cart_no = None
     if 'user_id' not in request.session:
         return redirect('home')
     elif 'user_id' in request.session:
         user = UserDataModel.objects.get(user_id=request.session['user_id'])
+        cart_no = CartDataModel.objects.filter(user__user_id=request.session['user_id']).count()
 
     address_data = UserAddressDataModel.objects.filter(user=user)
 
@@ -537,7 +558,7 @@ def my_address(request):
             return redirect('my_address')
 
 
-    return render(request,'myaddress.html',{'user':user,'address_data':address_data})
+    return render(request,'myaddress.html',{'user':user,'address_data':address_data,'cart_no':cart_no})
 
 def delete_address(request,add_id):
     add_obj = UserAddressDataModel.objects.get(address_id=add_id)
@@ -546,26 +567,32 @@ def delete_address(request,add_id):
 
 def my_orders(request):
     user = None
+    cart_no = None
     if 'user_id' not in request.session:
         return redirect('home')
     elif 'user_id' in request.session:
         user = UserDataModel.objects.get(user_id=request.session['user_id'])
-    return render(request,'myorders.html',{'user':user})
+        cart_no = CartDataModel.objects.filter(user__user_id=request.session['user_id']).count()
+    return render(request,'myorders.html',{'user':user,'cart_no':cart_no})
 
 def my_payments(request):
     user = None
+    cart_no = None
     if 'user_id' not in request.session:
         return redirect('home')
     elif 'user_id' in request.session:
         user = UserDataModel.objects.get(user_id=request.session['user_id'])
-    return render(request,'payments.html',{'user':user})
+        cart_no = CartDataModel.objects.filter(user__user_id=request.session['user_id']).count()
+    return render(request,'payments.html',{'user':user,'cart_no':cart_no})
 
 def my_wishlist(request):
     user = None
+    cart_no = None
     if 'user_id' not in request.session:
         return redirect('home')
     elif 'user_id' in request.session:
         user = UserDataModel.objects.get(user_id=request.session['user_id'])
+        cart_no = CartDataModel.objects.filter(user__user_id=request.session['user_id']).count()
 
     wish_data = WishlistModel.objects.filter(user=user)
 
@@ -583,7 +610,7 @@ def my_wishlist(request):
 
             return redirect('cart')
 
-    return render(request,'wishlist.html',{'user':user,'wish_data':wish_data})
+    return render(request,'wishlist.html',{'user':user,'wish_data':wish_data,'cart_no':cart_no})
 
 def remove_wishlist(request,wish_id):
     wish_obj =WishlistModel.objects.get(wishlist_id=wish_id)

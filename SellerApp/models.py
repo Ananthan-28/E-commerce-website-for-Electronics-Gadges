@@ -1,9 +1,9 @@
 from django.db import models
+from django.utils import timezone
 from AdminApp.models import *
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 
-# Create your models here.
 class SellerDataModel(models.Model):
     seller_id = models.AutoField(primary_key=True)
     seller_licence = models.CharField(max_length=255,unique=True)
@@ -41,23 +41,25 @@ class ProductModel(models.Model):
     def __str__(self):
         return self.product_name
 
-    def has_discount(self):
-        return self.productdiscounts.exists()
-
     def latest_discount(self):
         latest_discount = self.productdiscounts.all().order_by('-created_at').first()
         return latest_discount
 
+    def has_discount(self):
+        latest_discount = self.latest_discount()
+        if latest_discount is not None and latest_discount.event.status == 'Active' and latest_discount.event.discount_end_date > timezone.now():
+            return self.productdiscounts.exists()
+        else:
+            return False
+
     def discount_price(self):
         latest_discount = self.latest_discount()
 
-        if latest_discount is not None:
+        if latest_discount is not None and latest_discount.event.status == 'Active' and latest_discount.event.discount_end_date > timezone.now():
             discounted_price = self.product_price - latest_discount.discount_amount
             return discounted_price
         else:
             return self.product_price
-
-        return self.product_price
 
     def discount_percentage(self):
         latest_discount = self.latest_discount()
