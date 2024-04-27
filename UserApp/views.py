@@ -627,3 +627,11 @@ def deactivate(request,user_id):
     del request.session['user_id']
     user_obj.delete()
     return redirect('home')
+
+def store_locations(request):
+    user = None
+    cart_no = None
+    if 'user_id' in request.session:
+        user = UserDataModel.objects.get(user_id=request.session['user_id'])
+        cart_no = CartDataModel.objects.filter(user__user_id=request.session['user_id']).count()
+    return render(request,'store_locator.html',{'user':user,'cart_no':cart_no})

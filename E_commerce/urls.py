@@ -26,6 +26,7 @@ urlpatterns = [
     path('home/',user_views.home,name='home'),
     path('about_us/',user_views.about_us,name='about_us'),
     path('contact_us/',user_views.contact,name='contact'),
+    path('store_locations/',user_views.store_locations,name='store'),
     path('home/category/<int:cat_id>/',user_views.category_function,name='category'),
     path('product_details/<int:pro_id>',user_views.product_details,name='product_details'),
     path('login/',user_views.login,name='login'),
