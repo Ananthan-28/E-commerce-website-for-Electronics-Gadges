@@ -135,8 +135,7 @@
           {% for address in address_data %}
             <div class="card mt-3 mb-4">
               <div class="d-flex align-items-center position-relative">
-                <input type="radio" id="address{{forloop.counter}}" name="address" value="{{address.address_id}}" class="me-2 ms-2">
-                <h4 class="card-title">Address {{forloop.counter}} </h4>
+                <h4 class="card-title ms-3">Address {{forloop.counter}} </h4>
                 <div class="position-absolute end-0">
                   <div class="dropdown">
                     <button class="btn p-0 me-3" type="button" id="dropdownMenuButton{{ forloop.counter }}" data-bs-toggle="dropdown" aria-expanded="false" style="background: none; border: none;">

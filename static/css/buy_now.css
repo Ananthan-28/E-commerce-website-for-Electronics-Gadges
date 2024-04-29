@@ -1,0 +1,68 @@
+.ps-6 {
+  padding-left: 3.6rem;
+  }
+  .fontrobo{
+  font-family: Roboto;
+  font-weight: 400;
+  }
+  body {
+    margin: 0;
+    background-color: azure;
+  }
+  .logo{
+    width:650px;
+    height:105px;
+  }
+  .content-size{
+    font-size: 1.25rem;
+  }
+  .title-section{
+    background-color: #FF9800;
+  }
+  .address-button{
+    color:#f57e34;
+    border:none;
+    border: 1px solid #f57e34;
+    border-width: 2px;
+  }
+  .address-button:hover{
+    color: white;
+    background-color: #f57e34;
+  }
+  .price-title{
+    font-family: Roboto;
+    font-weight: 500;
+    font-size: 19px;
+  }
+  .price-body{
+    font-family: Roboto;
+    font-weight: 400;
+  }
+  .price-decoration{
+    border:1px dashed rgb(180, 175, 175);
+    border-left: none;
+    border-right: none;
+  }
+  .brand-name{
+    font-size: 19px;
+  }
+  .seller-name{
+    font-size: 14px;
+  }
+  .choices{
+    font-family: Roboto;
+    font-weight: 500;
+    font-size: 17px;
+  }
+  .delivery-details{
+    font-size: 15px;
+  }
+  .place-order-button{
+    background-color: #F95712;
+    color:black;
+    font-size: 18px;
+    border-radius: 4px;
+    border:0;
+    width:180px;
+    height: 40px;
+  }

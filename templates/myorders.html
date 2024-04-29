@@ -132,77 +132,122 @@
           </ul>
         </div>
         <div class="col-9">
-
-          <div class="card mt-2">
-            <div class="card-title text-secondary d-flex">
-              <div class="grey-circle mt-2 me-1"></div>
-              Dispatched
-            </div>
-              <div class="card-body d-flex">
-                <div>
-                  <img class="mx-auto p-image" src="/Images/mob/mob1_sgs23.png">
+          {% for order in order_data %}
+            <div class="card mt-2 mb-3">
+              {% if order.status == 'dispatched' %}
+                <div class="card-title text-secondary d-flex ms-2">
+                  <div class="grey-circle mt-2 me-1"></div>
+                  Dispatched
                 </div>
-                <div class="ps-4">
-                  <p class="fs-5 fw-bold">Samsung Galaxy s23 Ultra</p>
-                  <p class="fw-thin text-secondary mb-0">Arrives Tomorrow</p>
-                  <p class="fw-thin text-secondary mt-1">10am - 6pm</p>
+              {% else %}
+                  <div class="card-title text-danger d-flex ms-2 ">
+                  <div class="grey-circle bg-danger mt-2 me-1"></div>
+                  Cancelled
                 </div>
-                <div class="p-order-details justify-content-center">
-                  <button type="button" class="d-block btn-center-track">Track your order</button>
-                  <button type="button" class="d-block btn-center">View order details</button>
-                  <button type="button" class="d-block btn-center">Get Invoice</button>
-                  <button type="button" class="d-block btn-center">Edit order</button>
-                </div>
-              </div>
-            </div>
-            <div class="card mt-2">
-              <div class="card-title text-secondary d-flex">
-                <div class="grey-circle mt-2 me-1"></div>
-                Arrived on 18 November
-              </div>
+              {% endif %}
                 <div class="card-body d-flex">
                   <div>
-                    <img class="mx-auto p-image" src="/Images/Laps/lap3.png">
+                    <div class="position-relative">
+                      <a class="text-decoration-none" href="{% url 'product_details' order.product.product_id %}"><img class="mx-auto p-image" src="{{order.product.images.first.product_image.url}}"></a>
+                      {% if order.status == 'cancelled' %}
+                        <div class="text-danger fw-bold ps-0 position-absolute top-50 ms-4">
+                          <p class="bg-light">Cancelled</p>
+                        </div>
+                      {% endif %}
+                    </div>
+
                   </div>
                   <div class="ps-4">
-                    <p class="fs-5 fw-bold">Dell 15 Laptop,<br>
-                      i5 12th gen,512GB SSD,8GB RAM</p>
+                    <a class="text-decoration-none" href="{% url 'product_details' order.product.product_id %}"><p class="fs-5 fw-bold text-dark">{{order.product.product_name}}</p></a>
+                    <p class="fw-thin text-secondary mb-0">Arrives Within 5 Days</p>
+                    <p class="fw-thin text-secondary mt-1">10am - 6pm</p>
                   </div>
                   <div class="p-order-details justify-content-center">
-                    <button type="button" class="d-block btn-center">View order details</button>
-                    <button type="button" class="d-block btn-center">Get Invoice</button>
-                    <button type="button" class="d-block btn-center">Edit order</button>
+                    {% if order.status == 'dispatched' %}
+                      <button type="button" class="d-block btn-center-track">Track your order</button>
+                    {% endif %}
+                    <button type="button" class="d-block btn-center" data-bs-toggle="modal" data-bs-target="#detailsModal{{forloop.counter}}">View order details</button>
+                    {% if order.status == 'dispatched' %}
+                      <button type="button" class="d-block btn-center" data-bs-toggle="modal" data-bs-target="#cancelModal{{forloop.counter}}">Cancel order</button>
+                      <div class="modal fade" id="cancelModal{{forloop.counter}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" >Cancel Order</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              Do you want to cancel your product?
+                            </div>
+                            <div class="modal-footer">
+                              <form method="POST">
+                               {% csrf_token %}
+                               <input type="hidden" name="order_id" value="{{order.user_order_id}}">
+                               <button type="submit" name="cancel_order" class="btn btn-danger">Cancel order</button>
+                              </form>
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    {% endif %}
                   </div>
                 </div>
-              </div>
-              <div class="card mt-2 mb-3">
-                <div class="card-title text-secondary d-flex">
-                  <div class="grey-circle mt-2 me-1"></div>
-                  Arrived on 25 October
-                </div>
-                  <div class="card-body d-flex">
-                    <div>
-                      <img class="mx-auto p-image" src="/Images/tv/tv3.png">
-                    </div>
-                    <div class="ps-4">
-                      <p class="fs-5 fw-bold">ONEPLUS 108 cm (43 inch),Full
-                        HD <br> Smart LED TV, 43Y1
-                    </div>
-                    <div class="p-order-details justify-content-center">
-                      <button type="button" class="d-block btn-center">View order details</button>
-                      <button type="button" class="d-block btn-center">Get Invoice</button>
-                      <button type="button" class="d-block btn-center">Edit order</button>
+            </div>
+            <div class="modal fade" id="detailsModal{{forloop.counter}}" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Order Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="container">
+                      <div class="row">
+                        <table class="table">
+                          <tr>
+                              <th>Product</th>
+                              <td>{{order.product.product_name}}</td>
+                          </tr>
+                          <tr>
+                              <th>Delivery Address</th>
+                              <td>{{order.address.address_name}},{{order.address.house_address}},{{order.address.city_address}},{{order.address.state_address}},{{order.address.pincode_address}}</td>
+                          </tr>
+                          <tr>
+                              <th>Order Quantity</th>
+                              <td>{{order.user_order_quantity}}</td>
+                          </tr>
+                          <tr>
+                              <th>Order Date</th>
+                              <td>{{order.order_date}}</td>
+                          </tr>
+                          <tr>
+                              <th>Reference</th>
+                              <td>{{order.billing_ref_no}}</td>
+                          </tr>
+                          <tr>
+                              <th>Cost</th>
+                              <td>{{order.order_cost}}</td>
+                          </tr>
+                          <tr>
+                              <th>Payment Method</th>
+                              <td>{{order.payment_method}}</td>
+                          </tr>
+                        </table>
+
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            
-          </div>
-          
+          {% endfor %}
         </div>
+            
       </div>
+          
     </div>
+
   </section>
 
   <section class="footor">

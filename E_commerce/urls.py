@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from UserApp import views as user_views
 from SellerApp import views as seller_views
-from django.urls import path
+from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -44,6 +44,8 @@ urlpatterns = [
     path('home/my_account/wishlist',user_views.my_wishlist,name='my_wishlist'),
     path('home/my_account/wishlist/remove-wish/<int:wish_id>',user_views.remove_wishlist,name='remove_wish'),
     path('search_results/',user_views.search_results,name='search_results'),
+    path('purchase_product/<int:product_id>',user_views.purchase_product,name='buy_now'),
+
     path('logout/',user_views.logout,name='logout'),
     path('deactivate/<int:user_id>',user_views.deactivate,name='deactivate'),
     path('seller_home/',seller_views.home,name='seller_home'),
@@ -53,7 +55,8 @@ urlpatterns = [
     path('seller_home/add_discount/',seller_views.add_discount,name='add_discount'),
     path('seller_registration/',seller_views.seller_registration,name='seller_registration'),
     path('seller_login/',seller_views.seller_login,name='seller_login'),
-    path('seller_logout/',seller_views.seller_logout,name='seller_logout')
+    path('seller_logout/',seller_views.seller_logout,name='seller_logout'),
+    path('paypal/', include('paypal.standard.ipn.urls')),
 
 
 

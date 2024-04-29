@@ -2,11 +2,11 @@ from django.shortcuts import render,redirect
 from django.db.models import Q
 from SellerApp.models import *
 from AdminApp.models import *
-from UserApp.models import UserDataModel,CartDataModel,WishlistModel,UserAddressDataModel,ReviewDataModel
+from UserApp.models import UserDataModel,CartDataModel,WishlistModel,UserAddressDataModel,ReviewDataModel,OrderDetailsModel
 from .utils import product_rating,send_otp
 from django.core.mail import send_mail
 import pyotp
-
+from paypal.standard.forms import PayPalPaymentsForm
 import random
 
 # Create your views here.
@@ -381,42 +381,40 @@ def dashboard(request):
 
 def cart(request):
     user = None
+    product = None
     if 'user_id' not in request.session:
         return redirect('home')
     elif 'user_id' in request.session:
         user = UserDataModel.objects.get(user_id=request.session['user_id'])
-
-    cart_data = CartDataModel.objects.filter(user=user)
-    cart_count = cart_data.count()
-    total_price= 0
-    total_discount = 0
-    for item in cart_data:
-        total_price += item.cart_quantity * item.product.product_price
-    for i in cart_data:
-        if i.product.has_discount:
+        cart_data = CartDataModel.objects.filter(user=user)
+        cart_count = cart_data.count()
+        total_price= 0
+        total_discount = 0
+        for item in cart_data:
+            total_price += item.cart_quantity * item.product.product_price
+        for i in cart_data:
             if i.product.has_discount:
                 discount_amount_per_product = i.product.product_price - i.product.discount_price()
                 total_discount += i.cart_quantity * discount_amount_per_product
-    net_amount = total_price-total_discount
+        net_amount = total_price-total_discount
 
+        if request.method == "POST":
+            cart_id = request.POST.get('cart_id')
+            product_data = request.POST.get('product_data')
+            product = ProductModel.objects.get(product_id=product_data)
+            cart_obj = CartDataModel.objects.get(cart_id=cart_id)
 
-    if request.method == "POST":
-        cart_id = request.POST.get('cart_id')
-        product_data = request.POST.get('product_data')
-        product = ProductModel.objects.get(product_id=product_data)
-        cart_obj = CartDataModel.objects.get(cart_id=cart_id)
+            if 'cart_add' in request.POST:
+                cart_obj.cart_quantity += 1
+            elif 'cart_min' in request.POST and cart_obj.cart_quantity > 0:
+                cart_obj.cart_quantity -= 1
 
-        if 'cart_add' in request.POST:
-            cart_obj.cart_quantity += 1
-        elif 'cart_min' in request.POST and cart_obj.cart_quantity > 0:
-            cart_obj.cart_quantity -= 1
+            cart_obj.user = user
+            cart_obj.product = product
+            cart_obj.save()
+            return redirect('cart')
 
-        cart_obj.user = user
-        cart_obj.product = product
-        cart_obj.save()
-        return redirect('cart')
-
-    return render(request,'cart.html',{'user':user,'cart_data':cart_data,'cart_count':cart_count,'total_price':total_price,'total_discount':total_discount,'net_amount':net_amount})
+    return render(request,'cart.html',{'user':user,'cart_data':cart_data,'cart_count':cart_count,'total_price':total_price,'total_discount':total_discount,'net_amount':net_amount,'product_obj':product})
 
 def cart_remove(request,cart_id):
     cart_obj = CartDataModel.objects.get(cart_id=cart_id)
@@ -572,8 +570,37 @@ def my_orders(request):
         return redirect('home')
     elif 'user_id' in request.session:
         user = UserDataModel.objects.get(user_id=request.session['user_id'])
+        order_data = OrderDetailsModel.objects.filter(user=user)
         cart_no = CartDataModel.objects.filter(user__user_id=request.session['user_id']).count()
-    return render(request,'myorders.html',{'user':user,'cart_no':cart_no})
+        if request.method == "POST":
+            if 'cash_on_delivery' in request.POST:
+                product_data = ProductModel.objects.get(product_id=int(request.POST.get('product')))
+                user_data = user
+                address_data = UserAddressDataModel.objects.get(address_id=int(request.session['address_id']))
+                order_quantity = int(request.session['quantity'])
+                cost_data = int(request.POST.get('cost'))
+                order_obj = OrderDetailsModel()
+                order_obj.product = product_data
+                order_obj.user = user_data
+                order_obj.address = address_data
+                order_obj.user_order_quantity = order_quantity
+                order_obj.order_cost = cost_data
+                order_obj.payment_method = request.POST.get('payment')
+                order_obj.save()
+                cart_id = request.session.get('cart_id', None)
+                if cart_id is not None:
+                    cart_obj = CartDataModel.objects.get(cart_id = int(cart_id))
+                    cart_obj.delete()
+                    del request.session['cart_id']
+
+                return redirect('my_orders')
+            if 'cancel_order' in request.POST:
+                order_obj = OrderDetailsModel.objects.get(user_order_id=request.POST.get('order_id'))
+                order_obj.status = "cancelled"
+                order_obj.save()
+                return redirect('my_orders')
+
+    return render(request,'myorders.html',{'user':user,'cart_no':cart_no,'order_data':order_data})
 
 def my_payments(request):
     user = None
@@ -635,3 +662,45 @@ def store_locations(request):
         user = UserDataModel.objects.get(user_id=request.session['user_id'])
         cart_no = CartDataModel.objects.filter(user__user_id=request.session['user_id']).count()
     return render(request,'store_locator.html',{'user':user,'cart_no':cart_no})
+
+def purchase_product(request,product_id):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    else:
+        user_id = request.session['user_id']
+        user = UserDataModel.objects.get(user_id= user_id)
+        product_obj = ProductModel.objects.get(product_id=product_id)
+        address_data = UserAddressDataModel.objects.filter(user=user)
+        address_data_check = UserAddressDataModel.objects.filter(user=user).exists()
+        quantity = 1
+        total_price = product_obj.product_price * quantity
+        total_discount_price = product_obj.discount_price() * quantity
+        total_discount = total_price - total_discount_price
+        current_address = None
+        if address_data is not None:
+            first_address = address_data.first()
+            request.session['address_id'] = first_address.address_id
+            address_id = int(request.session['address_id'])
+            current_address = UserAddressDataModel.objects.get(address_id=address_id)
+        if request.method == "POST":
+            if 'del_add_change' in request.POST:
+                selected_address_id = request.POST.get('address_input')
+                request.session['address_id'] = selected_address_id
+                address_id = int(request.session['address_id'])
+                current_address = UserAddressDataModel.objects.get(address_id=address_id)
+            if 'quantity' in request.POST:
+                quantity = int(request.POST.get('quantity'))
+                request.session['quantity'] = quantity
+            else:
+                quantity = request.session.get('quantity', 1)
+            if 'cart_id' in request.POST:
+                cart_id = int(request.POST.get('cart_id'))
+                request.session['cart_id'] = cart_id
+
+            total_price = product_obj.product_price * quantity
+            total_discount_price = product_obj.discount_price() * quantity
+            total_discount = total_price - total_discount_price
+
+            return render(request, 'buy_now.html',{'user': user, 'product_obj': product_obj, 'discounted_price': total_discount_price,'quantity': quantity, 'total_price': total_price, 'total_discount': total_discount,'address_data':address_data, 'address_data_check':address_data_check , 'current_address': current_address})
+
+        return render(request, 'buy_now.html', {'user': user, 'product_obj': product_obj, 'discounted_price': total_discount_price,'quantity':quantity,'total_price':total_price,'total_discount':total_discount,'address_data':address_data, 'address_data_check':address_data_check ,'current_address':current_address})

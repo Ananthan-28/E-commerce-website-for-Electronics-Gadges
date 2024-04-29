@@ -150,7 +150,12 @@
                                                 <a href="{% url 'remove-cart' item.cart_id %}" class="text-decoration-none text-dark"><button class="btn btn-outline-danger choices">REMOVE</button></a>
                                             </div>
                                             <div>
-                                                <button class="place-order-button position-absolute end-0 me-2 choices">Place Order</button>
+                                                <form method="POST" action="{% url 'buy_now' item.product.product_id %}">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="quantity" value="{{ item.cart_quantity }}">
+                                                    <input type="hidden" name="cart_id" value="{{item.cart_id}}">
+                                                    <button type="submit" class="place-order-button position-absolute end-0 me-2 choices">Place Order</button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>

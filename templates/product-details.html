@@ -227,9 +227,9 @@
               <div class="buttons">
                 <form method="POST">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-warning btn-long" name="addtocart" data-bs-toggle="modal" data-bs-target="#CartModal">Add to Cart</button>
-                    <button type="submit" class="btn btn-success btn-long" name="buyitnow" data-bs-toggle="modal" data-bs-target="#BuyModal">Buy it Now</button>
-                    <button type="submit" class="btn btn-light wishlist" name="wishlist" data-bs-toggle="modal" data-bs-target="#WishlistModal"> <i class="bi bi-bookmark-heart"></i></button>
+                    <button type="submit" class="btn btn-warning btn-long" name="addtocart" >Add to Cart</button>
+                    <a class="text-decoration-none" href="{% url 'buy_now' product_obj.product_id %}" ><button type="button" class="btn btn-success btn-long" name="buyitnow"> Buy it Now</button></a>
+                    <button type="submit" class="btn btn-light wishlist" name="wishlist" > <i class="bi bi-bookmark-heart"></i></button>
                 </form>
               </div>
 

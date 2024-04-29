@@ -85,7 +85,9 @@ class OrderDetailsModel(models.Model):
     user_order_quantity = models.IntegerField()
     order_date = models.DateTimeField(auto_now_add=True)
     billing_ref_no = models.UUIDField(default=uuid.uuid4,unique=True)
-    status = models.TextField(max_length=10,default='Order Confirmed')
+    order_cost = models.IntegerField(null=True)
+    payment_method = models.CharField(max_length=20,null=True)
+    status = models.TextField(max_length=10,default='dispatched')
 
     class Meta:
         db_table = 'order_details_model'

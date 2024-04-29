@@ -1,0 +1,235 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <title>Purchase</title>
+  <link rel="stylesheet" href="{% static 'css/buy_now.css' %}">
+</head>
+<body>
+
+  <section id="header">
+    <div class="container-fluid title-section mb-3">
+      <div class="row">
+        <div class="col-lg-3 col-md-4 col-5">
+          <img class="img-fluid pe-0 mb-0 logo" src="{% static '/images/logo/logo.png' %}">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="order-details">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-8">
+          
+          <div class="col-12 pt-4">
+
+            <div class="accordion mb-5" id="order-details">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseOne">
+                    Address
+                  </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#order-details">
+                  <div class="accordion-body">
+                    <div class="d-flex align-items-center position-relative">
+                      <h4 class="card-title ps-3">Delivery Address</h4>
+                      <div class="position-absolute end-0">
+                        <div class="dropdown">
+                          <button class="btn p-0 me-3" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="background: none; border: none;">
+                              <i class="bi bi-three-dots-vertical"></i>
+                          </button>
+                          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            {% if current_address is not None %}<li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#changeModal">Change Address</button></li>{% endif %}
+                            <li><a class="text-decoration-none" href="{% url 'my_address' %}"><button class="dropdown-item" type="button" >Edit/Add Address</button></a></li>
+                          </ul>
+                        </div> 
+                      </div>
+                    </div>
+                    <div class="ms-3">
+                      {% if address_data is not None %}
+                        {{current_address.address_name}}, {{current_address.house_address}}, {{current_address.city_address}}, {{current_address.state_address}}, P.O. {{current_address.pincode_address}}, Pin:586934<br><br>
+                        ph.no: {{current_address.phone_no}}
+                      {% else %}
+                        <span class="text-danger">No Address is given. Add an address first.</span>
+                      {% endif %}
+                    </div>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal fade" id="changeModal" tabindex="0" aria-labelledby="changeModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Select Address</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form method="POST">
+                      {% csrf_token %}
+                        {% for address in address_data %}
+                          <div class="card mt-3 mb-4">
+                            <div class="d-flex align-items-center position-relative">
+                              <input type="radio" name="address_input" class="form-check-input ms-2" value="{{address.address_id}}" {% if forloop.counter == 1 %} checked {% endif %}><h6 class="card-title ms-3">Address {{forloop.counter}} </h6>
+                            </div>
+                              <div class="card-body ms-3">
+                                {{ address.address_name }}, {{ address.house_address }}, {{ address.city_address }}, {{ address.state_address }}, Pin:{{ address.pincode_address }}<br><br>
+                                ph.no: {{ address.phone_no }}
+                              </div>
+                          </div>
+                        {% endfor %}
+                        <button type="submit" name="del_add_change" class="btn btn-primary">Save changes</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion" id="order-details">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Order Summary
+                  </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#order-details">
+                  <div class="accordion-body d-flex">
+                    <div class="col-2">
+                      <a class="text-decoration-none" href="{% url 'product_details' product_obj.product_id %}"><img class="img-fluid" src="{{product_obj.images.first.product_image.url}}"></a>
+                    </div>
+                    <div class="col-7 ps-6">
+                      <a class="text-decoration-none" href="{% url 'product_details' product_obj.product_id %}"><p class="text-primary brand-name mb-0">{{product_obj.product_name}}</p></a>
+                      <p class="text-secondary seller-name mb-3">Seller:{{product_obj.seller.seller_company_name}}</p>
+                      {% if product_obj.has_discount %}
+                        <p class="class text-seconadary mb-5"><span class="text-decoration-line-through text-secondary og-price">₹{{product_obj.product_price | intcomma}}</span> <span class="fw-bold fs-5">₹{{product_obj.discount_price | intcomma}}</span>
+                        <span class="text-success">{{product_obj.discount_percentage}}% off 1 offer applied <i class="bi bi-info-circle-fill"></i></span></p>
+                      {% else %}
+                        <span class="fw-bold fs-5">₹{{product_obj.discount_price | intcomma}}</span>
+                      {% endif %}
+                    </div>
+                    <div class="col-3 ps-5">
+                      <p class="delivery-details">Delivery with in 5 days  |<span class="text-decoration-line-through text-secondary">₹40</span><span class="text-success">Free</span></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion mt-5" id="order-details">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseOne">
+                    Payment
+                  </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#order-details">
+                  <div class="accordion-body">
+
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="payment_method" id="PayPal" value="PayPal">
+                      <label class="form-check-label" for="PayPal">PayPal</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="payment_method" id="cash_od" value="cash_od">
+                      <label class="form-check-label" for="cash_od">Cash on delivery</label>
+                    </div>
+
+                    <div id="PayPal_form" class="payment-form d-none">
+                      <div class="d-flex">
+                        <div class="input-group mt-2">
+                          <div>
+                              <input type="submit" class="btn btn-success ms-2" value="Confirm Payment" {% if not address_data_check %} disabled {% endif %} >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div id="cash_od_form" class="payment-form d-none">
+                      <div class="mt-3">
+                          <div class="address-button-div d-flex">
+                            <div class="mt-1">
+                              <p>Delivery Charges:<span class="text-decoration-line-through ps-2">₹40 </span><span class="text-success ms-1">Free</span></p>
+                            </div>  
+                            <div>
+                              <form method="POST" action="{% url 'my_orders' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="product" value="{{product_obj.product_id}}">
+                                <input type="hidden" name="cost" value="{{discounted_price}}">
+                                <input type="hidden" name="payment" value="Cash on Delivery">
+                                <input type="submit" name="cash_on_delivery" class="btn btn-success ms-2" value="Buy now" {% if not address_data_check %} disabled {% endif %}>
+                              </form>
+                            </div>  
+                          </div>
+                      </div>      
+                    </div>
+                    
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        </div>
+          
+
+        <div class="col-md-4 ps-md-4">
+          <div class="card">
+            <div class="card-body">
+              <div class="price-title text-secondary">
+                PRICE DETAILS (Quantity: {{quantity}})
+              </div>
+              <div class="d-flex position-relative mt-3">
+                <p>Price</p>
+                <div class="address-button-div">
+                  <p class="position-absolute end-0">₹{{total_price | intcomma}}</p>
+                </div>
+              </div>
+              {% if product_obj.has_discount %}
+                <div class="d-flex position-relative mt-3">
+                  <p>Discount</p>
+                  <div class="address-button-div">
+                    <p class="position-absolute end-0 text-success">-₹{{total_discount | intcomma}}</p>
+                  </div>
+                </div>
+              {% endif %}
+              <div class="d-flex position-relative mt-3">
+                <p>Delivary Charges</p>
+                <div class="address-button-div">
+                  <p class="position-absolute end-0"><span class="text-decoration-line-through">₹40 </span><span class="text-success">Free</span></p>
+                </div>
+              </div>
+              <div class="d-flex position-relative mt-4 price-decoration">
+                <p class="price-body fs-4">Total Amount</p>
+                <div class="address-button-div">
+                  <p class="position-absolute end-0 fs-4 price-body">₹{{discounted_price | intcomma}}</p>
+                </div>
+              </div>
+              <div class="mt-2">
+                <span class="text-success">You'll save ₹{{total_discount | intcomma}} on this order </span>
+              </div>
+            </div>  
+          </div>    
+        </div>
+      </div>
+    </div>
+    
+  </section>
+
+  </body>
+
+  <script src="{% static 'script/buy_now.js' %}"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  </html>
