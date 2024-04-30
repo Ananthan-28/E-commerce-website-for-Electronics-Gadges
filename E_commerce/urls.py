@@ -53,10 +53,15 @@ urlpatterns = [
     path('seller_home/my_listing/',seller_views.my_listing,name='my_listing'),
     path('seller_home/add_listing/',seller_views.add_listing,name='add_listing'),
     path('seller_home/add_discount/',seller_views.add_discount,name='add_discount'),
+    path('seller_home/active_orders/',seller_views.active_orders,name='active_orders'),
     path('seller_registration/',seller_views.seller_registration,name='seller_registration'),
     path('seller_login/',seller_views.seller_login,name='seller_login'),
     path('seller_logout/',seller_views.seller_logout,name='seller_logout'),
+
     path('paypal/', include('paypal.standard.ipn.urls')),
+    path('paypal-reverse/',user_views.paypal_reverse,name='paypal_reverse'),
+    path('paypal_cancel/',user_views.paypal_cancel,name='paypal_cancel'),
+
 
 
 

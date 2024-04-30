@@ -183,6 +183,7 @@
                               <form method="POST">
                                {% csrf_token %}
                                <input type="hidden" name="order_id" value="{{order.user_order_id}}">
+                                <input type="hidden" name="product_id" value="{{order.product.product_id}}">
                                <button type="submit" name="cancel_order" class="btn btn-danger">Cancel order</button>
                               </form>
                               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

@@ -84,7 +84,7 @@ class OrderDetailsModel(models.Model):
     address = models.ForeignKey(UserAddressDataModel, on_delete=models.CASCADE)
     user_order_quantity = models.IntegerField()
     order_date = models.DateTimeField(auto_now_add=True)
-    billing_ref_no = models.UUIDField(default=uuid.uuid4,unique=True)
+    billing_ref_no = models.IntegerField(unique=True)
     order_cost = models.IntegerField(null=True)
     payment_method = models.CharField(max_length=20,null=True)
     status = models.TextField(max_length=10,default='dispatched')

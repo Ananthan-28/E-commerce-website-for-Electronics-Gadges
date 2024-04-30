@@ -7,7 +7,10 @@ from .utils import product_rating,send_otp
 from django.core.mail import send_mail
 import pyotp
 from paypal.standard.forms import PayPalPaymentsForm
+from django.conf import settings
 import random
+from django.core.exceptions import ObjectDoesNotExist
+from django.urls import reverse
 
 # Create your views here.
 
@@ -579,6 +582,8 @@ def my_orders(request):
                 address_data = UserAddressDataModel.objects.get(address_id=int(request.session['address_id']))
                 order_quantity = int(request.session['quantity'])
                 cost_data = int(request.POST.get('cost'))
+                last_order_data = OrderDetailsModel.objects.all().order_by('-user_order_id').first()
+                last_ref_no = int(last_order_data.billing_ref_no)
                 order_obj = OrderDetailsModel()
                 order_obj.product = product_data
                 order_obj.user = user_data
@@ -586,18 +591,31 @@ def my_orders(request):
                 order_obj.user_order_quantity = order_quantity
                 order_obj.order_cost = cost_data
                 order_obj.payment_method = request.POST.get('payment')
+                if last_order_data is not None:
+                    order_obj.billing_ref_no = last_ref_no+1
+                else:
+                    order_obj.billing_ref_no = 100000
                 order_obj.save()
+                new_stock = int(product_data.seller_product_stock)-int(order_obj.user_order_quantity)
+                product_data.seller_product_stock = new_stock
+                product_data.save()
                 cart_id = request.session.get('cart_id', None)
-                if cart_id is not None:
-                    cart_obj = CartDataModel.objects.get(cart_id = int(cart_id))
+                try:
+                    cart_obj = CartDataModel.objects.get(cart_id=int(cart_id))
                     cart_obj.delete()
                     del request.session['cart_id']
+                except ObjectDoesNotExist:
+                    cart_obj = None
 
                 return redirect('my_orders')
             if 'cancel_order' in request.POST:
+                product_data = ProductModel.objects.get(product_id=int(request.POST.get('product_id')))
                 order_obj = OrderDetailsModel.objects.get(user_order_id=request.POST.get('order_id'))
                 order_obj.status = "cancelled"
                 order_obj.save()
+                new_stock = int(product_data.seller_product_stock)+int(order_obj.user_order_quantity)
+                product_data.seller_product_stock = new_stock
+                product_data.save()
                 return redirect('my_orders')
 
     return render(request,'myorders.html',{'user':user,'cart_no':cart_no,'order_data':order_data})
@@ -664,6 +682,7 @@ def store_locations(request):
     return render(request,'store_locator.html',{'user':user,'cart_no':cart_no})
 
 def purchase_product(request,product_id):
+    request.session['product_session'] = product_id
     if 'user_id' not in request.session:
         return redirect('login')
     else:
@@ -672,16 +691,15 @@ def purchase_product(request,product_id):
         product_obj = ProductModel.objects.get(product_id=product_id)
         address_data = UserAddressDataModel.objects.filter(user=user)
         address_data_check = UserAddressDataModel.objects.filter(user=user).exists()
-        quantity = 1
-        total_price = product_obj.product_price * quantity
-        total_discount_price = product_obj.discount_price() * quantity
-        total_discount = total_price - total_discount_price
+
         current_address = None
         if address_data is not None:
             first_address = address_data.first()
             request.session['address_id'] = first_address.address_id
             address_id = int(request.session['address_id'])
             current_address = UserAddressDataModel.objects.get(address_id=address_id)
+
+
         if request.method == "POST":
             if 'del_add_change' in request.POST:
                 selected_address_id = request.POST.get('address_input')
@@ -692,7 +710,7 @@ def purchase_product(request,product_id):
                 quantity = int(request.POST.get('quantity'))
                 request.session['quantity'] = quantity
             else:
-                quantity = request.session.get('quantity', 1)
+                quantity = request.session.get('quantity')
             if 'cart_id' in request.POST:
                 cart_id = int(request.POST.get('cart_id'))
                 request.session['cart_id'] = cart_id
@@ -701,6 +719,115 @@ def purchase_product(request,product_id):
             total_discount_price = product_obj.discount_price() * quantity
             total_discount = total_price - total_discount_price
 
-            return render(request, 'buy_now.html',{'user': user, 'product_obj': product_obj, 'discounted_price': total_discount_price,'quantity': quantity, 'total_price': total_price, 'total_discount': total_discount,'address_data':address_data, 'address_data_check':address_data_check , 'current_address': current_address})
+            last_order_data = OrderDetailsModel.objects.all().order_by('-user_order_id').first()
+            if last_order_data is not None:
+                last_ref_no = int(last_order_data.billing_ref_no) + 1
+            else:
+                last_ref_no = 100000
 
-        return render(request, 'buy_now.html', {'user': user, 'product_obj': product_obj, 'discounted_price': total_discount_price,'quantity':quantity,'total_price':total_price,'total_discount':total_discount,'address_data':address_data, 'address_data_check':address_data_check ,'current_address':current_address})
+            paypal_dict = {
+                'business': settings.PAYPAL_RECEIVER_EMAIL,
+                'amount': "{:.2f}".format(total_discount_price),
+                'item_name': str(product_obj.product_name),
+                'invoice': str(last_ref_no),
+                'currency_code': 'USD',
+                "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
+                "return_url": request.build_absolute_uri(reverse('paypal_reverse')),
+                "cancel_return": request.build_absolute_uri(reverse('paypal_cancel')),
+                "quantity": int(request.session['quantity'])
+            }
+            form = PayPalPaymentsForm(initial=paypal_dict)
+
+            return render(request, 'buy_now.html',{'user': user, 'product_obj': product_obj, 'discounted_price': total_discount_price,'quantity': quantity, 'total_price': total_price, 'total_discount': total_discount,'address_data':address_data, 'address_data_check':address_data_check , 'current_address': current_address,'paypal_form':form})
+        else:
+            quantity = 1
+            request.session['quantity'] = quantity
+            total_price = product_obj.product_price * quantity
+            total_discount_price = product_obj.discount_price() * quantity
+            total_discount = total_price - total_discount_price
+            last_order_data = OrderDetailsModel.objects.all().order_by('-user_order_id').first()
+            
+            if last_order_data is not None:
+                last_ref_no = int(last_order_data.billing_ref_no) + 1
+            else:
+                last_ref_no = 100000
+
+            paypal_dict = {
+                'business': settings.PAYPAL_RECEIVER_EMAIL,
+                'amount': "{:.2f}".format(total_discount_price),
+                'item_name': str(product_obj.product_name),
+                'invoice': str(last_ref_no),
+                'currency_code': 'USD',
+                "notify_url": request.build_absolute_uri(reverse('paypal-ipn')),
+                "return_url": request.build_absolute_uri(reverse('paypal_reverse')),
+                "cancel_return": request.build_absolute_uri(reverse('paypal_cancel')),
+                "quantity": int(request.session['quantity'])
+            }
+            form = PayPalPaymentsForm(initial=paypal_dict)
+
+        return render(request, 'buy_now.html', {'user': user, 'product_obj': product_obj, 'discounted_price': total_discount_price,'quantity':quantity,'total_price':total_price,'total_discount':total_discount,'address_data':address_data, 'address_data_check':address_data_check ,'current_address':current_address,'paypal_form':form})
+
+def paypal_reverse(request):
+    user = None
+    if 'user_id' not in request.session:
+        return redirect('home')
+    elif 'user_id' in request.session:
+        user = UserDataModel.objects.get(user_id=request.session['user_id'])
+        product_obj = ProductModel.objects.get(product_id=int(request.session['product_session']))
+        quantity = int(request.session['quantity'])
+        order_obj = OrderDetailsModel()
+        order_obj.user = user
+        order_obj.product = product_obj
+        order_obj.address = UserAddressDataModel.objects.get(address_id=int(request.session['address_id']))
+        order_obj.user_order_quantity = quantity
+        total_discount_price = int(product_obj.discount_price()) * quantity
+        order_obj.order_cost = int(total_discount_price)
+        last_order_data = OrderDetailsModel.objects.all().order_by('-user_order_id').first()
+        last_ref_no = 0
+        if last_order_data is not None:
+            last_ref_no = int(last_order_data.billing_ref_no) + 1
+        else:
+            last_ref_no = 100000
+        order_obj.billing_ref_no = last_ref_no
+        order_obj.payment_method = 'PayPal'
+        order_obj.save()
+        new_stock = int(product_obj.seller_product_stock)-int(quantity)
+        product_obj.seller_product_stock = new_stock
+        product_obj.save()
+        cart_id = request.session.get('cart_id', None)
+        try:
+            cart_obj = CartDataModel.objects.get(cart_id=int(cart_id))
+            cart_obj.delete()
+            del request.session['cart_id']
+        except ObjectDoesNotExist:
+            cart_obj = None
+
+    return redirect('my_orders')
+
+def paypal_cancel(request):
+    user = None
+    if 'user_id' not in request.session:
+        return redirect('home')
+    elif 'user_id' in request.session:
+        user = UserDataModel.objects.get(user_id=request.session['user_id'])
+        product_obj = ProductModel.objects.get(product_id=int(request.session['product_session']))
+        quantity = int(request.session['quantity'])
+        order_obj = OrderDetailsModel()
+        order_obj.user = user
+        order_obj.product = product_obj
+        order_obj.address = UserAddressDataModel.objects.get(address_id=int(request.session['address_id']))
+        order_obj.user_order_quantity = quantity
+        total_discount_price = int(product_obj.discount_price()) * quantity
+        order_obj.order_cost = int(total_discount_price)
+        order_obj.payment_method = 'PayPal'
+        last_order_data = OrderDetailsModel.objects.all().order_by('-user_order_id').first()
+        last_ref_no = 0
+        if last_order_data is not None:
+            last_ref_no = int(last_order_data.billing_ref_no) + 1
+        else:
+            last_ref_no = 100000
+        order_obj.billing_ref_no = last_ref_no
+        order_obj.status = 'cancelled'
+        order_obj.save()
+
+    return redirect('my_orders')
