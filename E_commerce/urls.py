@@ -45,15 +45,16 @@ urlpatterns = [
     path('home/my_account/wishlist/remove-wish/<int:wish_id>',user_views.remove_wishlist,name='remove_wish'),
     path('search_results/',user_views.search_results,name='search_results'),
     path('purchase_product/<int:product_id>',user_views.purchase_product,name='buy_now'),
-
     path('logout/',user_views.logout,name='logout'),
     path('deactivate/<int:user_id>',user_views.deactivate,name='deactivate'),
+
     path('seller_home/',seller_views.home,name='seller_home'),
     path('seller_home/account_details/',seller_views.account_details,name='seller_details'),
     path('seller_home/my_listing/',seller_views.my_listing,name='my_listing'),
     path('seller_home/add_listing/',seller_views.add_listing,name='add_listing'),
     path('seller_home/add_discount/',seller_views.add_discount,name='add_discount'),
     path('seller_home/active_orders/',seller_views.active_orders,name='active_orders'),
+    path('seller_home/returns/',seller_views.returns,name='returns'),
     path('seller_registration/',seller_views.seller_registration,name='seller_registration'),
     path('seller_login/',seller_views.seller_login,name='seller_login'),
     path('seller_logout/',seller_views.seller_logout,name='seller_logout'),

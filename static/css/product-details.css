@@ -316,7 +316,9 @@
       color: gold;
     }
     .card-img-top{
+      object-fit: contain;
       transition: all 0.35s;
+      max-height: 160px;
     }
     .card-img-top:hover{
       transform: scale(1.05);

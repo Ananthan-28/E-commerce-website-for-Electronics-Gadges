@@ -1,0 +1,31 @@
+.logo{
+    width:650px;
+    height:105px;
+  }
+  .header-div{
+    background-color: #39f2ff;
+  }
+  .profile-icon{
+    height:50%;
+    width: 5%;
+  }
+  .dropdown{
+    height: 25px;
+  }
+  .gmail-addition{
+    padding: 0px 5px 5px;
+  }
+  .card-heading{
+    font-family: Roboto,sans-serif;
+    color: #18A3AC;
+
+  }
+  .card,.card-contents{
+    background-color: #F1F1F1;
+  }
+  .card-body{
+    height: 150px;
+  }
+  .nav-bar-content,.welcome-font,.roboto-font{
+    font-family:Roboto,sans-serif;
+  }

@@ -11,6 +11,7 @@ from django.conf import settings
 import random
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
+from django.contrib import messages
 
 # Create your views here.
 
@@ -250,9 +251,15 @@ def product_details(request,pro_id):
 
     user = None
     cart_no = None
+    hidden_btn = False
+
     if 'user_id' in request.session:
         user = UserDataModel.objects.get(user_id=request.session['user_id'])
         cart_no = CartDataModel.objects.filter(user__user_id=request.session['user_id']).count()
+
+        user_orders = OrderDetailsModel.objects.filter(user=user, product=product_obj, status='dispatched')
+        if user_orders.exists():
+            hidden_btn = True
 
 
     if request.method == "POST":
@@ -280,6 +287,8 @@ def product_details(request,pro_id):
                 review_obj.user_rating = rating
                 review_obj.save()
                 return redirect('product_details', pro_id=pro_id)
+
+
         else:
             return redirect('login')
 
@@ -295,7 +304,8 @@ def product_details(request,pro_id):
                                                                         'reviews_data':reviews_data,
                                                                         'review_count': review_count,
                                                                         'filled_review_counts':filled_review_counts,
-                                                                        'cart_no':cart_no})
+                                                                        'cart_no':cart_no,
+                                                                        'hidden_btn':hidden_btn})
 
 def sign_up(request):
     user_error = ''
@@ -628,7 +638,8 @@ def my_payments(request):
     elif 'user_id' in request.session:
         user = UserDataModel.objects.get(user_id=request.session['user_id'])
         cart_no = CartDataModel.objects.filter(user__user_id=request.session['user_id']).count()
-    return render(request,'payments.html',{'user':user,'cart_no':cart_no})
+        order_data = OrderDetailsModel.objects.filter(user=user)
+    return render(request,'payments.html',{'user':user,'cart_no':cart_no,'order_data':order_data})
 
 def my_wishlist(request):
     user = None

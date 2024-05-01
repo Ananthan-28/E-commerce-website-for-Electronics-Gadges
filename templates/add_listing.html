@@ -43,9 +43,8 @@
             <div class="dropdown pt-1">
               <button class="btn dropdown-toggle gmail-addition" type="button" id="dropdownMenu3" data-bs-toggle="dropdown" aria-expanded="false"></button>
               <ul class="dropdown-menu" aria-labelledby="dropdownMenu3">
-                <li><a class="dropdown-item" type="button">Active Orders</a></li>
-                <li><a class="dropdown-item" type="button">Returns</a></li>
-                <li><a class="dropdown-item" type="button">Cancellation</a></li>
+                <li><a class="dropdown-item" href="{% url 'active_orders' %}" type="button">Active Orders</a></li>
+                <li><a class="dropdown-item" href="{% url 'returns' %}" type="button">Returns</a></li>
               </ul>
             </div>
           </div>

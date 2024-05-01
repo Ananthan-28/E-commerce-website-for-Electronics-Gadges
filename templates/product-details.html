@@ -359,8 +359,9 @@
                       <h4>Ratings & Review</h4>
                     </div>
                     <div class="rate-product">
-                      <button class="review-button" data-bs-toggle="modal" data-bs-target="#ReviewModal">Rate Product</button>
-                      
+                      {% if hidden_btn %}
+                        <button class="review-button"  data-bs-toggle="modal" data-bs-target="#ReviewModal">Rate Product</button>
+                      {% endif %}
                       <div class="modal fade" id="ReviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                           <div class="modal-content">

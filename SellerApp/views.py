@@ -6,10 +6,12 @@ import pyotp
 from datetime import datetime, timedelta
 from django.db.models import Q
 from SellerApp.models import *
+from UserApp.models import OrderDetailsModel
 from AdminApp.models import ProductCategoryModel
 
 # Create your views here.
 def home(request):
+    request.session['seller_id'] = 1
     if 'seller_id' in request.session:
         seller_id = request.session['seller_id']
         seller_obj = SellerDataModel.objects.get(seller_id=seller_id)
@@ -552,6 +554,31 @@ def seller_login(request):
         return render(request,'selllogin.html')
 
 
+def active_orders(request):
+    if 'seller_id' in request.session:
+        seller_id = request.session['seller_id']
+        seller=SellerDataModel.objects.get(seller_id=seller_id)
+        order_data = OrderDetailsModel.objects.filter(product__seller=seller)
+        orders_just_placed = 0
+        for order in order_data:
+            if order.status == 'dispatched':
+                orders_just_placed += 1
+        return render(request, 'activeorders.html', {'seller': seller, 'order_placed': orders_just_placed})
+    else:
+        return redirect('seller_login')
+
+def returns(request):
+    if 'seller_id' in request.session:
+        seller_id = request.session['seller_id']
+        seller=SellerDataModel.objects.get(seller_id=seller_id)
+        order_data = OrderDetailsModel.objects.filter(product__seller = seller)
+        orders_cancelled= 0
+        for order in order_data:
+            if order.status == 'cancelled':
+                orders_cancelled += 1
+        return render(request,'returns.html',{'seller':seller,'order_cancelled':orders_cancelled })
+    else:
+        return redirect('seller_login')
 def seller_logout(request):
     if 'seller_id' in request.session:
         del request.session['seller_id']

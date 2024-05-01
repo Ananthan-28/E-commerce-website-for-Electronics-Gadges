@@ -148,10 +148,10 @@
                 <div class="card-body d-flex">
                   <div>
                     <div class="position-relative">
-                      <a class="text-decoration-none" href="{% url 'product_details' order.product.product_id %}"><img class="mx-auto p-image" src="{{order.product.images.first.product_image.url}}"></a>
+                      <a class="text-decoration-none" href="{% url 'product_details' order.product.product_id %}"><img class="mx-auto p-image {% if order.status == 'cancelled' %} out-of-stock {% endif %}" src="{{order.product.images.first.product_image.url}}"></a>
                       {% if order.status == 'cancelled' %}
                         <div class="text-danger fw-bold ps-0 position-absolute top-50 ms-4">
-                          <p class="bg-light">Cancelled</p>
+                          <p>Cancelled</p>
                         </div>
                       {% endif %}
                     </div>
