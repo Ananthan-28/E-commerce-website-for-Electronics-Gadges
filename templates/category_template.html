@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-
+  <link rel="shortcut icon" href="{% static 'images/logo/logo1.png' %}" type='image' sizes='48x48' />
   <title>Category | {{category_name.0.category_name}}</title>
   <link rel="stylesheet" href="{% static 'css/category_template.css' %}">
 </head>
@@ -111,9 +111,11 @@
     <div class="container-fluid mb-3">
       <div class="row justify-content-evenly">
         {% for i in category_data %}
-            <div class="col-md-2 d-block">
+            <div class="col-2 d-block">
               <a href="{% url 'category' i.category_id %}"><img class="img-fluid audio g-cursor" src="{{i.category_image.url}}"></a>
-              <a href="{% url 'category' i.category_id %}" class="text-decoration-none text-dark fs-4 d-flex align-items-center justify-content-center">{{i.category_name}}</a>
+              <div class="col-md-2 d-none d-md-inline">
+                <a href="{% url 'category' i.category_id %}" class="text-decoration-none text-dark fs-4 d-flex align-items-center justify-content-center">{{i.category_name}}</a>
+              </div>
             </div>
         {% endfor %}
 
@@ -190,11 +192,13 @@
       <div class="row">
         {% for i in brand_data %}
           <div class="col-3 mb-4">
-            <div class="card card-brand d-flex justify-content-center align-items-center">
-              <div class="card-body">
-                <img src="{{i.brand_image.url}}" class="brand-icons">
+            <a href="{% url 'search_results' %}?brand={{ i.brand_name }}&category={{ i.category.category_id }}">
+              <div class="card card-brand d-flex justify-content-center align-items-center">
+                <div class="card-body">
+                  <img src="{{i.brand_image.url}}" class="brand-icons">
+                </div>
               </div>
-            </div>
+            </a>
           </div>
         {% endfor %}
 

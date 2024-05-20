@@ -1,5 +1,6 @@
 {% load static %}
 {% load humanize %}
+{% load socialaccount %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,6 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
   <title>Home</title>
+  <link rel="icon" href="{% static 'images/logo/logo1.png' %}" type="image" sizes="48x48">
   <link rel="stylesheet" href="{% static '/css/home.css' %}">
 </head>
 <body>
@@ -77,7 +79,7 @@
         </div>
         <div class="col-1 pt-3 col-md-1 d-flex align-content-center justify-content-center hf-contents mt-1">
             {% if user %}
-              <a href="{% url 'dashboard' %}" class="d-none d-md-inline-block text-decoration-none text-dark username">{{ user.user_name }}</p></a>
+              <a href="{% url 'dashboard' %}" class="d-none d-md-inline-block text-decoration-none text-dark username">{{ user.user_name }}</a>
               <div class="profile-div ms-2">
                 {% if user.user_profile_img %}
                     <a href="{% url 'dashboard' %}"><img class="profile-pic" src="{{user.user_profile_img.url}}"></a>

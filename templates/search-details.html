@@ -13,6 +13,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <title>Search Results.</title>
   <link rel="stylesheet" href="{% static 'css/search-details.css' %}">
+  <link rel="shortcut icon" href="{% static 'images/logo/logo1.png' %}" type='image' sizes='48x48' />
 </head>
 <body>
   
@@ -61,7 +62,7 @@
                 {% endif %}
               </div>
             {% else %}
-              <a href="{% url 'login' %}" class="d-none d-md-inline-block text-decoration-none text-dark">LOGIN</p></a>
+              <a href="{% url 'login_new' %}" class="d-none d-md-inline-block text-decoration-none text-dark">LOGIN</p></a>
               <i class="bi bi-person-circle ps-1 g-cursor"></i>
             {% endif %}
         </div>
@@ -155,34 +156,6 @@
     </div>
   </div>
 
-  {% if brand_data is not None %}
-      <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBrand" aria-labelledby="offcanvasBrandLabel">
-        <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="offcanvasBrandLabel">Brand</h5>
-          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-          <div>
-            <form id="priceForm" method="POST">
-              {% csrf_token %}
-              <div class="form-check">
-
-                {% for brand in brand_data %}
-                    <div class="mb-2">
-                      <input class="form-check-input" type="checkbox" value="{{brand.brand_name}}"  id="Brand1" name="Brand">
-                      <label class="form-check-label" for="Brand1">
-                          {{brand.brand_name}}
-                      </label>
-                    </div>
-                {% endfor %}
-
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-  {% endif %}
-
   <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasRating" aria-labelledby="offcanvasRatingLabel">
     <div class="offcanvas-header">
       <h5 class="offcanvas-title" id="offcanvasRatingLabel">Rating </h5>
@@ -259,42 +232,42 @@
             <li class="nav-item">
               <h5>Filters</h5>
             </li>
-            <form id="priceForm" method="POST">
+            <form id="priceForm2" method="POST">
               {% csrf_token %}
               <li class="nav-item">
                 <div class="form-check">
                     <h6 class="mt-2">Price</h6>
                     
                     <div class="mb-2">
-                      <input class="form-check-input" type="checkbox" value=80000  id="priceRange1" name="priceRange">
+                      <input class="form-check-input" type="checkbox" value=80000  id="priceRange11" name="priceRange">
                       <label class="form-check-label" for="priceRange1">
                           < ₹ 80000
                       </label>
                     </div>  
 
                     <div class="mb-2">
-                      <input class="form-check-input" type="checkbox" value=60000  id="priceRange2" name="priceRange">
+                      <input class="form-check-input" type="checkbox" value=60000  id="priceRange12" name="priceRange">
                       <label class="form-check-label" for="priceRange2">
                          < ₹ 60000
                       </label>
                     </div>
 
                     <div class="mb-2">
-                      <input class="form-check-input" type="checkbox" value=45000  id="priceRange3" name="priceRange">
+                      <input class="form-check-input" type="checkbox" value=45000  id="priceRange13" name="priceRange">
                       <label class="form-check-label" for="priceRange3">
                          < ₹ 45000
                       </label>
                     </div>
 
                     <div class="mb-2">
-                      <input class="form-check-input" type="checkbox" value=30000  id="priceRange4" name="priceRange">
+                      <input class="form-check-input" type="checkbox" value=30000  id="priceRange14" name="priceRange">
                       <label class="form-check-label" for="priceRange4">
                          < ₹ 30000
                       </label>
                     </div>
 
                     <div class="mb-2">
-                      <input class="form-check-input" type="checkbox" value=20000  id="priceRange5" name="priceRange">
+                      <input class="form-check-input" type="checkbox" value=20000  id="priceRange15" name="priceRange">
                       <label class="form-check-label" for="priceRange5">
                           < ₹ 20000
                       </label>
@@ -307,57 +280,41 @@
                       <h6 class="mt-2">Rating</h6>
 
                       <div class="mb-2">
-                        <input class="form-check-input" type="checkbox" value=5  id="rating1" name="rating">
+                        <input class="form-check-input" type="checkbox" value=5  id="rating11" name="rating">
                         <label class="form-check-label" for="rating1">
                           <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
                         </label>
                       </div>
 
                       <div class="mb-2">
-                        <input class="form-check-input" type="checkbox" value=4  id="rating2" name="rating">
+                        <input class="form-check-input" type="checkbox" value=4  id="rating12" name="rating">
                         <label class="form-check-label" for="rating2">
                           <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
                         </label>
                       </div>
 
                       <div class="mb-2">
-                        <input class="form-check-input" type="checkbox" value=3  id="rating3" name="rating">
+                        <input class="form-check-input" type="checkbox" value=3  id="rating13" name="rating">
                         <label class="form-check-label" for="rating3">
                           <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
                         </label>
                       </div>
 
                       <div class="mb-2">
-                        <input class="form-check-input" type="checkbox" value=2  id="rating4" name="rating">
+                        <input class="form-check-input" type="checkbox" value=2  id="rating14" name="rating">
                         <label class="form-check-label" for="rating4">
                           <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
                         </label>
                       </div>
 
                       <div class="mb-2">
-                        <input class="form-check-input" type="checkbox" value=1  id="rating5" name="rating">
+                        <input class="form-check-input" type="checkbox" value=1  id="rating15" name="rating">
                         <label class="form-check-label" for="rating5">
                           <i class="bi bi-star-fill"></i>
                         </label>
                       </div>
                   </div>
                 </li>
-
-                {% if brand_data is not None %}
-                    <li class="nav-item">
-                      <div class="form-check">
-                          <h6 class="mt-2">Brand</h6>
-                          {% for brand in brand_data %}
-                            <div class="mb-2">
-                              <input class="form-check-input" type="checkbox" value="{{brand.brand_name}}"  id="Brand1" name="Brand">
-                              <label class="form-check-label" for="Brand1">
-                                  {{brand.brand_name}}
-                              </label>
-                            </div>
-                          {% endfor %}
-                      </div>
-                    </li>
-                {% endif %}
       
             </form>
             

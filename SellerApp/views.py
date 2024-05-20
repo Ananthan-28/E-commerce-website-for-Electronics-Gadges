@@ -18,6 +18,8 @@ def home(request):
         product_data = ProductModel.objects.filter(seller=seller_obj)
         product_active = product_data.filter(product_status='active').count()
         product_inactive = product_data.filter(product_status='inactive').count()
+        new_orders = OrderDetailsModel.objects.filter(product__seller__seller_id = seller_id ,status = 'dispatched').count()
+        cancelled_orders = OrderDetailsModel.objects.filter(product__seller__seller_id = seller_id ,status = 'cancelled').count()
         low_stock=0
         no_stock=0
         for data in product_data:
@@ -25,7 +27,7 @@ def home(request):
                 no_stock +=1
             elif data.seller_product_stock <=10:
                 low_stock +=1
-        return render (request,'seller_dashboard.html',{'seller':seller_obj,'product_active':product_active,'product_inactive':product_inactive,'low_stock':low_stock,'no_stock':no_stock})
+        return render (request,'seller_dashboard.html',{'seller':seller_obj,'product_active':product_active,'product_inactive':product_inactive,'low_stock':low_stock,'no_stock':no_stock,'new_orders':new_orders,'cancelled_orders':cancelled_orders})
     else:
         return redirect('seller_login')
 

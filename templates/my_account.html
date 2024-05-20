@@ -1,4 +1,5 @@
 {% load static %}
+{% load socialaccount %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,6 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
   <title>My Account</title>
   <link rel="stylesheet" href="{% static 'css/my_account.css' %}">
+  <link rel="shortcut icon" href="{% static 'images/logo/logo1.png' %}" type='image' sizes='48x48' />
 </head>
 <body>
 
@@ -188,10 +190,17 @@
                       <div class="modal-body">
                         Do you want to log out?
                       </div>
-                      <div class="modal-footer">
-                        <a class="text-decoration-none" href="{% url 'logout' %}"><button type="button" class="btn btn-warning">Log out</button></a>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      </div>
+                      {% if request.user.is_authenticated %}
+                        <div class="modal-footer">
+                          <a class="text-decoration-none" href="{% url 'account_logout' %}"><button type="button" class="btn btn-warning">Log out</button></a>
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                      {% else %}
+                        <div class="modal-footer">
+                          <a class="text-decoration-none" href="{% url 'logout' %}"><button type="button" class="btn btn-warning">Log out</button></a>
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                      {% endif %}
                     </div>
                   </div>
                 </div>

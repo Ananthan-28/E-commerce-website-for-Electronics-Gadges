@@ -11,7 +11,6 @@ from django.conf import settings
 import random
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
-from django.contrib import messages
 
 # Create your views here.
 
@@ -63,13 +62,25 @@ def home(request):
 
 def search_results(request):
     user = None
-    cart_no =None
+    cart_no = None
+    product_data = None
+
     if 'user_id' in request.session:
         cart_no = CartDataModel.objects.filter(user__user_id=request.session['user_id']).count()
         user = UserDataModel.objects.get(user_id=request.session['user_id'])
 
+    brand_name = request.GET.get('brand')
+    category_data = request.GET.get('category')
+    if brand_name and category_data:
+        search_data = ''
+        product_data = ProductModel.objects.filter(Q(category__category_id=category_data) & Q(product_brand__brand_name__icontains=brand_name))
+        star_range = range(5)
+        user_rating_half = None
+        product_rating(product_data)
+    else:
+        product_data = ProductModel.objects.all()
+
     category_data = ProductCategoryModel.objects.all()
-    product_data = ProductModel.objects.all()
 
     reordered_category_data = [
         category_data[2],
@@ -83,16 +94,15 @@ def search_results(request):
         'mobiles': 'Smartphone',
         'Mobile': 'Smartphone',
         'Mobiles': 'Smartphone',
-        'audio' : 'Audio',
+        'audio': 'Audio',
         'computer': 'Computer',
         'pc': 'Computer',
-        'tv':'Television',
+        'tv': 'Television',
         'TV': 'Television',
         'Tv': 'Television',
         'television': 'Television',
         'laptop': 'Laptop',
     }
-
 
     if request.method == 'POST':
         search_data = request.POST.get('search-data', '')
@@ -102,28 +112,21 @@ def search_results(request):
             if category_name:
                 price_ranges = request.POST.getlist('priceRange')
                 price_ranges = [int(price) for price in price_ranges]
-                product_data = product_data.filter(category__category_name__icontains=category_name,product_price__lt=min(price_ranges))
-                brand_data = ProductBrandModel.objects.filter(category__category_name__icontains=category_name).distinct()
+                product_data = product_data.filter(category__category_name__icontains=category_name, product_price__lt=min(price_ranges))
             else:
                 price_ranges = request.POST.getlist('priceRange')
                 price_ranges = [int(price) for price in price_ranges]
-                product_data = product_data.filter(Q(product_name__icontains=search_data) | Q(product_brand__icontains=search_data) | Q(category__category_name__icontains=search_data),product_price__lt=min(price_ranges))
-                brand_data = None
-
+                product_data = product_data.filter(Q(product_name__icontains=search_data) | Q(product_brand__brand_name__icontains=search_data) | Q(category__category_name__icontains=search_data), product_price__lt=min(price_ranges))
         elif category_name:
             product_data = product_data.filter(category__category_name__icontains=category_name)
-            print(product_data)
-            brand_data = ProductBrandModel.objects.filter(category__category_name__icontains=category_name).distinct()
         else:
-            product_data = product_data.filter(Q(product_name__icontains=search_data) | Q(product_brand__icontains=search_data) | Q(category__category_name__icontains=search_data))
-            print(product_data)
-            brand_data = None
+            product_data = product_data.filter(Q(product_name__icontains=search_data) | Q(product_brand__brand_name__icontains=search_data) | Q(category__category_name__icontains=search_data))
 
         star_range = range(5)
         user_rating_half = None
         product_rating(product_data)
 
-    return render(request,'search-details.html',{'user': user,'category_data':reordered_category_data,'product_data':product_data,'star_range':star_range,'user_rating_half':user_rating_half,'search_data':search_data,'brand_data':brand_data,'cart_no':cart_no})
+    return render(request, 'search-details.html', {'user': user, 'category_data': reordered_category_data, 'product_data': product_data, 'star_range': star_range, 'user_rating_half': user_rating_half, 'search_data': search_data, 'cart_no': cart_no})
 
 def contact(request):
     user = None
@@ -463,6 +466,22 @@ def my_account(request):
                 username = request.POST.get('username')
                 user.user_name = username
                 user.save()
+            elif 'name_btn' in request.POST:
+                firstname = request.POST.get('firstname')
+                lastname = request.POST.get('lastname')
+                user.user_first_name = firstname
+                user.user_last_name = lastname
+                user.save()
+            elif 'email_btn' in request.POST:
+                email = request.POST.get('email')
+                user.user_email = email
+                user.save()
+            elif 'phnobtn' in request.POST:
+                phno = request.POST.get('phno')
+                user.user_phone = phno
+                user.save()
+
+            return redirect('my_account')
 
     return render(request,'my_account.html',{'user':user,'cart_no':cart_no})
 
@@ -806,12 +825,13 @@ def paypal_reverse(request):
         product_obj.seller_product_stock = new_stock
         product_obj.save()
         cart_id = request.session.get('cart_id', None)
-        try:
-            cart_obj = CartDataModel.objects.get(cart_id=int(cart_id))
-            cart_obj.delete()
-            del request.session['cart_id']
-        except ObjectDoesNotExist:
-            cart_obj = None
+        if cart_id is not None:
+            try:
+                cart_obj = CartDataModel.objects.get(cart_id=int(cart_id))
+                cart_obj.delete()
+                del request.session['cart_id']
+            except ObjectDoesNotExist:
+                cart_obj = None
 
     return redirect('my_orders')
 

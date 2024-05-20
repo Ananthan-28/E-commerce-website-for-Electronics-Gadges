@@ -1,29 +1,37 @@
-"""
-URL configuration for E_commerce project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from UserApp import views as user_views
 from SellerApp import views as seller_views
+from AdminApp import views as admin_views
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('home/',user_views.home,name='home'),
+    path('dj-admin/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),
+
+    path('admin/',admin_views.dashboard,name='admin_dashboard'),
+    path('admin/discount_events',admin_views.discounts,name='admin_discounts'),
+    path('admin/discount_events/discount_remove/<int:discount_id>',admin_views.discount_remove,name='discount_remove'),
+    path('admin/customers',admin_views.customers,name='admin_customers'),
+    path('admin/sellers',admin_views.sellers,name='admin_sellers'),
+    path('admin/categories',admin_views.categories,name='admin_categories'),
+    path('admin/categories/cat_remove/<int:cat_id>',admin_views.category_remove,name='category_remove'),
+    path('admin/sellers/delete_seller/<int:delete_id>',admin_views.delete_seller,name='delete_seller'),
+    path('admin/customers/add_seller',admin_views.add_seller,name='add_seller'),
+    path('admin/products',admin_views.products,name='admin_products'),
+    path('admin/products/remove_products/<int:product_id>',admin_views.remove_product,name='product_remove'),
+    path('admin/orders',admin_views.orders,name='admin_orders'),
+    path('admin/customers/add_customers',admin_views.add_customer,name='add_customer'),
+    path('admin/remove_customers/<int:delete_id>',admin_views.delete_customer,name='delete_customer'),
+    path('admin/customers/customer_details/<int:customer_id>',admin_views.customer_details, name='customer_details'),
+    path('admin/sellers/seller_details/<int:vendor_id>',admin_views.seller_details,name='vendor_details'),
+    path('admin/orders/order_details/<int:order_id>',admin_views.order_details,name='order_content'),
+
+
+
+
+    path('',user_views.home,name='home'),
     path('about_us/',user_views.about_us,name='about_us'),
     path('contact_us/',user_views.contact,name='contact'),
     path('store_locations/',user_views.store_locations,name='store'),

@@ -28,11 +28,11 @@ class ProductModel(models.Model):
     seller = models.ForeignKey(SellerDataModel, on_delete=models.CASCADE)
     category = models.ForeignKey(ProductCategoryModel, on_delete=models.CASCADE)
     product_name = models.CharField(max_length=500)
-    product_brand = models.CharField(max_length=15)
     product_description = models.CharField(max_length=500)
     product_price = models.IntegerField()
     seller_product_stock = models.IntegerField()
     user_rating = models.DecimalField(max_digits=2, decimal_places=1,validators=[MinValueValidator(0), MaxValueValidator(5)], null=True)
+    product_brand = models.ForeignKey(ProductBrandModel,on_delete=models.CASCADE,null=True)
     product_status = models.CharField(max_length=8, default='active')
 
     class Meta:

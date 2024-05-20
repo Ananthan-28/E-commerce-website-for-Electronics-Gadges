@@ -19,7 +19,7 @@ class AdminDataModel(models.Model):
 class ProductCategoryModel(models.Model):
     category_id = models.AutoField(primary_key=True)
     category_name = models.CharField(max_length=50)
-    category_image = models.ImageField(upload_to='categories',null=True)
+    category_image = models.ImageField(upload_to='categories/',null=True)
 
     class Meta:
         db_table = 'product_category_model'
@@ -59,7 +59,7 @@ class EventModel(models.Model):
         return self.event_name
 
     def save(self, *args, **kwargs):
-        if self.discount_end_date <= timezone.now():
+        if self.discount_end_date and self.discount_end_date <= timezone.now():
             self.status = 'Inactive'
         super().save(*args, **kwargs)
 

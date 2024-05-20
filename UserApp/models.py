@@ -1,5 +1,4 @@
 from django.db import models
-
 from SellerApp.models import *
 from django.core.validators import MaxValueValidator, MinValueValidator
 import uuid
@@ -106,3 +105,4 @@ class WishlistModel(models.Model):
 
     def __str__(self):
         return self.user.user_name
+
