@@ -4,7 +4,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-pfb==!#(3n7j!bmz#*_pm^dg(e@@my-x4)#8******'
+SECRET_KEY = 'django-insecure-pfb==!#(3n7j!bmz#*_pm^dg(e@@my-x4)#8ve+_)lu0*qcoex'
 
 DEBUG = True
 
@@ -13,13 +13,6 @@ ALLOWED_HOSTS = []
 SITE_ID = 1
 
 # Application definition
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-
-    'allauth.account.auth_backends.AuthenticationBackend',
-]
-
-LOGIN_REDIRECT_URL ='/'
 
 INSTALLED_APPS = [
     'paypal.standard.ipn',
@@ -32,13 +25,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'django.contrib.sites',
-
-
-
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.github',
 
     'UserApp',
     'AdminApp',
@@ -53,8 +39,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'E_commerce.urls'
@@ -75,15 +59,7 @@ TEMPLATES = [
     },
 ]
 
-SOCIALACCOUNT_PROVIDERS = {
-    'github': {
-        'APP': {
-            'client_id': 'Ov23li74******',
-            'secret': '8ce77480e05fa1b725e4******',
-            'key': ''
-        }
-    }
-}
+
 
 WSGI_APPLICATION = 'E_commerce.wsgi.application'
 
@@ -153,7 +129,7 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'techbuy97@gmail.com'
-EMAIL_HOST_PASSWORD = 'fcuc********'
+EMAIL_HOST_PASSWORD = 'fcucayo****'
 EMAIL_USE_TLS = True
 
 #PayPal_settings
@@ -162,7 +138,3 @@ PAYPAL_TEST = True
 
 PAYPAL_RECEIVER_EMAIL = 'sb-sh924730641600@business.example.com'
 
-# Email File Based Test
-
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = BASE_DIR / 'emails'

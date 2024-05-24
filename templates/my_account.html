@@ -190,12 +190,7 @@
                       <div class="modal-body">
                         Do you want to log out?
                       </div>
-                      {% if request.user.is_authenticated %}
-                        <div class="modal-footer">
-                          <a class="text-decoration-none" href="{% url 'account_logout' %}"><button type="button" class="btn btn-warning">Log out</button></a>
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
-                      {% else %}
+                      {% if user %}
                         <div class="modal-footer">
                           <a class="text-decoration-none" href="{% url 'logout' %}"><button type="button" class="btn btn-warning">Log out</button></a>
                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

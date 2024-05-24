@@ -72,7 +72,7 @@ def search_results(request):
     brand_name = request.GET.get('brand')
     category_data = request.GET.get('category')
     if brand_name and category_data:
-        search_data = ''
+        search_data = f'{brand_name}'
         product_data = ProductModel.objects.filter(Q(category__category_id=category_data) & Q(product_brand__brand_name__icontains=brand_name))
         star_range = range(5)
         user_rating_half = None
@@ -108,15 +108,22 @@ def search_results(request):
         search_data = request.POST.get('search-data', '')
         category_name = search_term_mappings.get(search_data)
 
+
         if 'priceRange' in request.POST:
+            price_data = request.POST.get('priceRange')
+            price_value = int(price_data)
             if category_name:
-                price_ranges = request.POST.getlist('priceRange')
-                price_ranges = [int(price) for price in price_ranges]
-                product_data = product_data.filter(category__category_name__icontains=category_name, product_price__lt=min(price_ranges))
+                product_data = product_data.filter(category__category_name__icontains=category_name,product_price__lt=price_value)
             else:
-                price_ranges = request.POST.getlist('priceRange')
-                price_ranges = [int(price) for price in price_ranges]
-                product_data = product_data.filter(Q(product_name__icontains=search_data) | Q(product_brand__brand_name__icontains=search_data) | Q(category__category_name__icontains=search_data), product_price__lt=min(price_ranges))
+                product_data = product_data.filter(Q(product_name__icontains=search_data) | Q(product_brand__brand_name__icontains=search_data) | Q(category__category_name__icontains=search_data),product_price__lt=price_value)
+
+        if 'rating' in request.POST:
+            rating_search = int(request.POST.get('rating'))
+            if category_name:
+                product_data = product_data.filter(category__category_name__icontains=category_name,user_rating__gt=rating_search)
+            else:
+                product_data = product_data.filter(Q(product_name__icontains=search_data) |Q(product_brand__brand_name__icontains=search_data) |Q(category__category_name__icontains=search_data),user_rating__gt=rating_search)
+
         elif category_name:
             product_data = product_data.filter(category__category_name__icontains=category_name)
         else:
