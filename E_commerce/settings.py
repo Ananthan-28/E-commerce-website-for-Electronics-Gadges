@@ -8,7 +8,7 @@ SECRET_KEY = 'django-insecure-pfb==!#(3n7j!bmz#*_pm^dg(e@@my-x4)#8ve+_)lu0*qcoex
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 SITE_ID = 1
 
