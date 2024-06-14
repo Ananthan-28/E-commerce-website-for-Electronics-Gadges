@@ -59,24 +59,32 @@ TEMPLATES = [
     },
 ]
 
-
-
 WSGI_APPLICATION = 'E_commerce.wsgi.application'
-
 
 # Database
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'project_techbuy',
+#         'USER': 'root',
+#         'PASSWORD': '',
+#         'PORT': '',
+#         'HOST': '',
+#         'OPTION': {
+#             'init_method': {'SET sqlmode:"STRICT_TRANS_TABLE"'}
+#         }
+#     }
+# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'project_techbuy',
-        'USER':'root',
-        'PASSWORD':'',
-        'PORT':'',
-        'HOST':'',
-        'OPTION':{
-            'init_method':{'SET sqlmode:"STRICT_TRANS_TABLE"'}
-        }
+        'NAME': 'techbuy_project_db',
+        'USER': 'Ananthan',
+        'PASSWORD': 'Ananthan123',
+        'PORT': '3306',
+        'HOST': 'database-1.cdeusay8cv3h.us-east-1.rds.amazonaws.com',
+
     }
 }
 
@@ -95,7 +103,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
@@ -123,18 +130,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 
-#Email_settings
+# Email_settings
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'techbuy97@gmail.com'
-EMAIL_HOST_PASSWORD = 'fcucayo****'
+EMAIL_HOST_PASSWORD = 'fcucayofbvdowqyh'
 EMAIL_USE_TLS = True
 
-#PayPal_settings
+# PayPal_settings
 
 PAYPAL_TEST = True
 
 PAYPAL_RECEIVER_EMAIL = 'sb-sh924730641600@business.example.com'
-

@@ -61,9 +61,6 @@
                     <a href="{% url 'dashboard' %}"><img class="profile-pic" src="{{user.user_profile_img.url}}"></a>
                 {% endif %}
               </div>
-            {% else %}
-              <a href="{% url 'login_new' %}" class="d-none d-md-inline-block text-decoration-none text-dark">LOGIN</p></a>
-              <i class="bi bi-person-circle ps-1 g-cursor"></i>
             {% endif %}
         </div>
         <div class="col-1 col-md-1 pt-3 d-flex align-content-center justify-content-center hf-contents mt-1">
