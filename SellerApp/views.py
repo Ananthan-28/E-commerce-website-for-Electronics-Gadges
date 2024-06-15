@@ -11,7 +11,6 @@ from AdminApp.models import ProductCategoryModel
 
 # Create your views here.
 def home(request):
-    request.session['seller_id'] = 1
     if 'seller_id' in request.session:
         seller_id = request.session['seller_id']
         seller_obj = SellerDataModel.objects.get(seller_id=seller_id)
